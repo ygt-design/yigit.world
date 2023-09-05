@@ -21,7 +21,6 @@ $(document).ready(function () {
             $(this).hide();
             $('.display-image').animate({
                 "top": "-46.3%",
-                "opacity": 0,
             }, 200, function() {
                 $(this).hide();
             });
