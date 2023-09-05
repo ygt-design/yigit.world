@@ -1,0 +1,394 @@
+@font-face {
+  font-family: 'ar-Narrow';
+  src: url('./assets/fonts/ARIALN.TTF');
+}
+
+@font-face {
+  font-family: 'JK';
+  src: url('./assets/fonts/JK-Leetspeek-Web-Leet.woff');
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: ar-Narrow;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+canvas {
+  display: block;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+h1{
+  font-family: JK;
+}
+
+p{
+  font-size: 1.1rem;
+  line-height: 1.4rem;
+}
+
+.container{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+button{
+  background-color: yellow;
+  border: 1px dashed black;
+  padding: 10px;
+  cursor: pointer;
+  color: black;
+}
+
+button:hover{
+  background-color: black;
+  color: yellow;
+  cursor: pointer;
+  animation: shake 450ms ease infinite;
+}
+
+.box{
+  width: 500px;
+  aspect-ratio: 1;
+  background-color: white;
+  border: 1px solid black;
+  margin: 100px;
+}
+
+.interaction-box{
+  position: absolute;
+  z-index: 100;
+  bottom: 15px;
+  right: 15px;
+  padding: 15px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.boost{
+  width: max-content;
+  font-family: JK;
+  color: black;
+  border: 1px dashed black;
+  box-shadow: 0px 0px 20px 1px yellow;
+  margin-bottom: 15px;
+  padding: 5px;
+  border-radius: 30px;
+  text-align: right;
+  margin-left: auto;
+  margin-right: 0;
+background-color: white;
+}
+
+.boost a{
+  color: black;
+}
+
+.boost:hover{
+  background-color: black;
+  color: yellow;
+  animation: shake 450ms ease infinite;
+  cursor: pointer;
+}
+
+.boost:hover a{
+  color: yellow;
+}
+
+@keyframes shake {
+  0%{
+    transform: rotate(10deg);
+  }
+
+  50%{
+    transform: rotate(-10deg);
+  }
+
+  100%{
+    transform: rotate(10deg);
+  }
+}
+
+.projects{
+  display: none;
+  margin: 15px;
+  position: absolute;
+  box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
+  background-color: white;
+  padding: 15px;
+  width: 20vw; 
+  bottom: -100vh;
+  margin-bottom: 0;
+  height: calc(auto + 100vh);
+}
+
+.projects ul{
+  list-style-type: none;
+  padding: 0;
+  height: 100%;
+}
+
+.projects ul li{
+  font-size: 1.2rem;
+  padding: 5px 10px 5px 10px; 
+  margin-bottom: 15px;
+  border: 1px dashed black;
+  width: auto;
+  cursor: pointer;
+  transition: all 100ms ease-in-out;
+  border-radius: 30px;
+  /* width: max-content; */
+  z-index: 99;
+  cursor: pointer;
+}
+
+.projects ul li:hover{
+  color: black;
+  background-color: yellow;
+  transform: translateX(50px);
+  border: 1px solid black;
+  /* animation: shake 450ms ease infinite; */
+  cursor: pointer;
+}
+
+.works-container{
+  justify-content: center;
+  width: 55vw;
+  height: 100vh;
+  transform: translate(50%, 0);
+  overflow-y: scroll;
+}
+
+.display-image{
+  position: absolute;
+  background-position: center;
+  background-size: cover;
+  width: 55vw;
+  aspect-ratio: 1.6;
+  top: -115%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
+}
+
+.display-info{
+  opacity: 0;
+  background-color: white;
+  border: 1px solid black;
+  height: auto;
+  width: 98;
+  margin-left: auto;
+  margin-right: auto;
+  color: black;
+  font-size: 2rem;
+  margin-top: 20%;
+  padding: 15px;
+  box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
+}
+
+.display-info h1{
+ font-size: 2.4rem;
+ background-color: black;
+ color: yellow;
+ width: max-content;
+ padding: 15px;
+}
+
+.display-info p{
+  font-size: 1.2rem;
+}
+
+.additional-images{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
+  border: 1px solid black;
+}
+
+.additional-images img{
+  width: 100%;
+}
+
+.selected{
+  background-color: black;
+  color: yellow;
+}
+
+.info-detail{
+  position: fixed;
+  right: -50vw;
+  margin: 15px;
+  background-color: white;
+  border: 1px solid black;
+  width: 30vw;
+  padding: 15px;
+  box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
+  z-index: 100;
+}
+
+.info-detail span{
+  background-color: black;
+  color: yellow;
+  box-shadow: 0px 0px 20px 1px yellow;
+  padding: 2px;
+}
+
+.site-detail{
+  position: fixed;
+  margin: 15px;
+  background-color: yellow;
+  border: 1px solid black;
+  width: 40vw;
+  padding: 15px;
+  box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
+  z-index: 100;
+  top: 50%;
+  left: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.mobile{
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  z-index: 500;
+}
+
+.mobile .mobile-content{
+  padding: 20px;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 20px 1px yellow;
+  text-decoration-line: center;
+  font-size: 2rem;
+  width: 50%;
+  text-align: center;
+  display: flex;
+}
+
+.mobile-progress{
+  color: rgb(174, 174, 174);
+  position: absolute;
+  bottom: 200px;
+  text-align: center; 
+  bottom: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.mobile-progress button{
+  width: auto;
+  aspect-ratio: 2;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 1000px){
+  .mobile{
+    display: block;
+  }
+
+  h1{
+    font-size: 1rem;
+  }
+
+  .interaction-box{ 
+    position: absolute;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    top: 50%;
+    transform-origin: center;
+    transform: translate(-50%, -50%);
+    box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
+    padding: 30px;
+    z-index: 101;
+    background-color: white;
+    align-items: center;
+  }
+
+  .canvas{
+    display: none;
+  }
+  
+  .projects{
+    z-index: 100;
+    overflow-y: scroll;
+    top: 0;
+    font-size: 1rem;
+    margin: 0;
+    width: 30%;
+  }
+
+  .projects h1{
+    font-size: 1rem;
+  }
+
+  .projects ul li{
+    font-size: .8rem;
+  }
+
+  .works-container{
+    top: 0;
+    right: 0;
+    margin: 0;
+    z-index: 100;
+    position: fixed;
+    width: calc(100% - 40vw);
+    height: 100vh;
+    overflow-y: scroll;
+    transform: translate(0, 0);
+  }
+
+  .display-info h1{
+    font-size: 1rem;
+    width: auto;
+  }
+
+  .display-info p{
+    font-size: 0.8rem;
+    line-height: .9rem;
+  }
+
+  .info-detail{
+    z-index: 102;
+    width: 75%;
+    right: -100vw;
+  }
+
+  .site-detail{
+    width: 75%;
+    height: 60%;
+    overflow-y: scroll;
+    z-index: 102;
+  }
+
+  .display-image{
+    display: none;
+  }
+}

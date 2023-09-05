@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title> Yigit Toprak </title>
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="icon" href="assets/icons/duckRubber.png" type="image/gif" sizes="16x16">
+
+  <script src="libraries/p5.min.js"></script>
+  <script src="libraries/p5.sound.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script defer src="interactions.js"></script>
+</head>
+
+<body>
+  <div class="mobile">
+    <div class="mobile-content">
+      For the best experience, please view this website on a desktop browser.
+    </div>
+
+    <div class="mobile-progress">
+      If you stil wish to continue... <br><br>
+      <button class="continue"> continue </button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div id="sketch-holder"></div>
+
+    <div class="interaction-box">
+      <div class="boost selectedWork"> selectedWork() </div>
+      <div class="boost info"> i() </div>
+      <!-- <div class="boost archives"> archives() </div> -->
+      <div class="boost thisSite"> thisWebsite() </div>
+      <div class="boost">
+        <a href="https://www.are.na/yigit-toprak-7gxw91dmm9q" target="_blank">
+          are.na()</a>
+      </div>
+      <div class="boost">
+        <a href="mailto:designer.ygt@gmail.com">
+          email()</a>
+      </div>
+    </div>
+
+    <div class="info-detail">
+      <button class="close-info"> close </button>
+      <h1>
+        Info
+      </h1>
+      <p>
+        <span> Yiğit Toprak</span> is a graphic designer based in Toronto, Canada. He is currently in his fourth year
+        at OCAD University. He is interested in the intersection of design and technology, and how they can be used to
+        communicate ideas and create experiences. He is also intersted in generative art, web development, typeface
+        design, calligraphy, user interface design and visual identity systems. Outside art and design, he enjoys
+        tools, archives, philosophy, music and general semantics.
+      </p>
+    </div>
+
+    <div class="site-detail">
+      <button class="close-site"> close </button>
+      <h1>
+        This Website
+      </h1>
+      <p>
+        Driven by my dissatisfaction with my previous portfolio website, I have arrived at a profound realization: it no
+        longer captures the essence of who I am as a designer. It has been a revelation fueled by my deep fascination
+        with the transformative power of abstraction, as introduced by the brilliant mind of Alfred Korzybski. Intrigued
+        by this concept, I have wholeheartedly embraced it as a guiding principle in redefining my creative process and
+        shaping my approach to design. <br /><br /> This newfound appreciation for abstraction has sparked an intense
+        desire within me to transcend the ordinary and venture into uncharted territories of artistic expression. It
+        compels me to strip away the superfluous layers, leaving behind only the purest essence of my creative vision.
+        In doing so, I aim to distill the complexities of my design process into elegant and thought-provoking concepts
+        that resonate on a profound level. <br /><br /> Initially, I would like to try to upgrade this site with clues
+        from the event level and start making the event level appear more often in the object level using visual cues.
+      </p>
+
+    </div>
+
+    <div class="projects">
+      <button class="close"> close </button>
+      <h1>
+        Selected Work
+      </h1>
+      <ul>
+        <li class="work body"> — Images of Body and Story </li>
+        <li class="work obliterate"> — 1984 (Oblitertion) </li>
+        <li class="work emperor"> — Emperor Display </li>
+        <li class="work wood"> — Wood Type </li>
+        <a href="https://webspace.ocad.ca/~yigit.toprak/nullSpeak/index.html" target="_blank">
+          <li class="work null"> — Ø Speak </li>
+        </a>
+        <li class="work machine"> — Dialogue With The Machine </li>
+        <a href="https://webspace.ocad.ca/~yigit.toprak/Time%20Machine/final/index.html" target="_blank">
+          <li class="work emperorWeb"> — Emperor (WEB) </li>
+        </a>
+        <li class="work escape"> — Escape Route </li>
+        <li class="work factory"> — Factory Reset </li>
+        <a href="https://webspace.ocad.ca/~yigit.toprak/GDES_WEB/newGreen/landing/index.html" target="_blank">
+          <li class="work process"> — All About Process </li>
+        </a>
+      </ul>
+    </div>
+  </div>
+
+  <div class="works-container">
+    <div class="display-image"></div>
+    <div class="display-info"></div>
+  </div>
+
+  <script src="sketch.js"></script>
+</body>
+
+</html>
