@@ -21,6 +21,7 @@ $(document).ready(function () {
             $(this).hide();
             $('.display-image').animate({
                 "top": "-46.3%",
+                // "opacity": 0,
             }, 200, function() {
                 $(this).hide();
             });
@@ -99,7 +100,11 @@ $(document).ready(function () {
     $('.work').click(function () {
         $('.work').not(this).removeClass('selected');
         $(this).addClass('selected');
+    
+        // Scroll to the top of .display-info
+        $('.works-container').animate({ scrollTop: 100 }, 500, 'swing');    
     });
+    
 
     // $(".body").click(function (e) { 
     //     e.preventDefault();
@@ -168,6 +173,7 @@ $(document).ready(function () {
             "position": "relative",
             "opacity": 1,
         }).show();
+        
     });
 
     $(".obliterate").click(function (e) {
@@ -226,6 +232,7 @@ $(document).ready(function () {
             "position": "relative",
             "opacity": 1,
         }).show();
+        
     });
 
     $(".emperor").click(function (e) {
@@ -269,6 +276,7 @@ $(document).ready(function () {
             "position": "relative",
             "opacity": 1,
         }).show();
+        
     });
 
     $(".wood").click(function (e) {
@@ -318,6 +326,7 @@ $(document).ready(function () {
             "position": "relative",
             "opacity": 1,
         }).show();
+        
     });
 
     $(".machine").click(function (e) {
@@ -358,6 +367,7 @@ $(document).ready(function () {
             "position": "relative",
             "opacity": 1,
         }).show();
+        
     });
 
     $(".escape").click(function (e) {
@@ -399,6 +409,7 @@ $(document).ready(function () {
             "position": "relative",
             "opacity": 1,
         }).show();
+        
     });
 
     $(".factory").click(function (e) {
@@ -442,6 +453,7 @@ $(document).ready(function () {
             "position": "relative",
             "opacity": 1,
         }).show();
+        
     });
 
     //////////////////////////// media query < 1000px ////////////////////////////
