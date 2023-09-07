@@ -121,7 +121,8 @@ $(document).ready(function () {
       } else if ($(this).hasClass("process")) {
         backgroundImageURL = "https://www.yigittoprak.com/images/Process.png";
       } else if ($(this).hasClass("type")) {
-        backgroundImageURL = "https://www.yigittoprak.com/images/Process.png";
+        backgroundImageURL =
+          "https://d2w9rnfcy7mm78.cloudfront.net/21448126/original_f2544505fa25e2762f65304f43a37374.gif?1681835769?bc=0";
       }
 
       $(".display-image")
@@ -409,11 +410,12 @@ $(document).ready(function () {
 
     // Set the background image URL
     var backgroundImageURL =
-      "https://www.yigittoprak.com/images/woodTypeFinalIThink.jpg";
+      "https://d2w9rnfcy7mm78.cloudfront.net/21448126/original_f2544505fa25e2762f65304f43a37374.gif?1681835769?bc=0";
 
     // Set the content for the .display-info element for the 'Body' work
-    var infoTitle = "36 Days of Type";
-    var infoDescription = "";
+    var infoTitle = "26 Days of Type";
+    var infoDescription =
+      "In a project spanning 26 days, I set out to create one letter daily using various materials, mediums, and programs. This challenge aimed to explore the interaction between letterforms and their chosen materials. Through this project, I discovered the range of tools and techniques available in my design toolkit, enhancing my awareness of my creative process as I crafted letters each day.";
     var additionalImageURLs = [
       "https://d2w9rnfcy7mm78.cloudfront.net/21350529/original_2df49f74c121fc1ae80ed8564fe459b3.png?1681263504?bc=0",
       "https://d2w9rnfcy7mm78.cloudfront.net/21427598/original_f22b28452cb08e10f810c97bca11f75e.jpg?1681743793?bc=0",
