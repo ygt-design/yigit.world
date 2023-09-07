@@ -120,15 +120,19 @@ $(document).ready(function () {
         backgroundImageURL = "https://www.yigittoprak.com/images/3.jpg";
       } else if ($(this).hasClass("process")) {
         backgroundImageURL = "https://www.yigittoprak.com/images/Process.png";
+      } else if ($(this).hasClass("type")) {
+        backgroundImageURL = "https://www.yigittoprak.com/images/Process.png";
       }
 
       $(".display-image")
         .stop()
-        .css("background-image", "url('" + backgroundImageURL + "')")
+        .css({
+          "background-image": "url('" + backgroundImageURL + "')",
+        })
         .show()
         .animate(
           {
-            top: "46.3%",
+            top: "25vw",
           },
           100
         );
@@ -400,6 +404,76 @@ $(document).ready(function () {
       .show();
   });
 
+  $(".type").click(function (e) {
+    e.preventDefault();
+
+    // Set the background image URL
+    var backgroundImageURL =
+      "https://www.yigittoprak.com/images/woodTypeFinalIThink.jpg";
+
+    // Set the content for the .display-info element for the 'Body' work
+    var infoTitle = "36 Days of Type";
+    var infoDescription = "";
+    var additionalImageURLs = [
+      "https://d2w9rnfcy7mm78.cloudfront.net/21350529/original_2df49f74c121fc1ae80ed8564fe459b3.png?1681263504?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21427598/original_f22b28452cb08e10f810c97bca11f75e.jpg?1681743793?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21429840/original_b66a05d42a0608daa70c469bf5d2ad0f.gif?1681749494?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21448126/original_f2544505fa25e2762f65304f43a37374.gif?1681835769?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21448128/original_e7ef0b24aea0420be70c22ca6c7e9d99.jpg?1681835773?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21505781/original_9a44d2611f0248b4b70fd834100a3c0c.jpg?1682185947?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21515732/original_a270b9edc47780d1da7b862e56c92460.png?1682277942?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21650691/original_56a27d0540e677f73bdd4eb219e2d26a.gif?1683045051?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21877657/original_ed4707a447b3ede425845cc7fd4a5ff9.jpg?1684354015?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21879152/original_511858729bf3d6a77814843a06b5bfa1.gif?1684360456?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21881070/original_ce04b0ec7264c7eb631d07f8b21c40ff.png?1684374299?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21881524/original_87a7eafb153719bfa9ef9bf6221e41c9.png?1684378240?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21881530/original_81e7e96bbd33ba3626a4b68fb74b0744.png?1684378314?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21882214/original_d697018a348c1789b185e5bccb124a16.gif?1684383559?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21882345/original_43429aa8c8e275016bfd58ea353939a2.gif?1684384687?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21909342/original_5e74f24a0937b2a643a25a7a3e792957.png?1684550020?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21909343/original_26a9a6976a46f3fad48fcab0fbb4f7ef.jpg?1684550023?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/21929652/original_dcf60df7456415cb255a057384b1386d.png?1684730847?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/22074064/original_980140229e63598741646dead2b7a41b.jpg?1685589474?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/22213337/original_6ee5f81d6e2a0502328bd94763f2dcac.jpg?1686526776?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/23475817/original_8f6d24f9d3596fe67fd29eedf3317d54.gif?1693936615?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/23476064/original_49db0c4ddeac147982b68581cb01a722.png?1693937277?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/23476294/original_75553d7e5d1c57353ee55ab88bf7cb5a.png?1693938022?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/23476518/original_bd801d867dc6f56a96ca6f9b158ddfdf.jpg?1693938485?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/23476750/original_97d5cb8d7e704b894a457812fcf6b3c3.jpg?1693939374?bc=0",
+      "https://d2w9rnfcy7mm78.cloudfront.net/23477062/original_ee382bc0168a407edc2d359df3d06b0a.png?1693940166?bc=0",
+    ];
+
+    $(".display-image")
+      .css({
+        "background-image": "url('" + backgroundImageURL + "')",
+        "z-index": 100,
+        position: "relative",
+      })
+      .show();
+
+    var additionalImagesHTML = additionalImageURLs
+      .map((imageURL) => {
+        return `<img src="${imageURL}" alt="Additional Image">`;
+      })
+      .join("");
+
+    // Use template literals for h1 and p elements
+    var contentHTML = `
+            <h1>${infoTitle}</h1>
+            <p>${infoDescription}</p>
+            <div class="additional-images">${additionalImagesHTML}</div>
+        `;
+
+    $(".display-info")
+      .html(contentHTML)
+      .css({
+        display: "block",
+        position: "relative",
+        opacity: 1,
+      })
+      .show();
+  });
+
   $(".machine").click(function (e) {
     e.preventDefault();
 
@@ -554,7 +628,7 @@ $(document).ready(function () {
   $(".selectedWork").click(function (e) {
     e.preventDefault();
     // Check if window width is less than 1000
-    if ($(window).width() < 1000) {
+    if ($(window).width() < 850) {
       // Set z-index of .interaction-box to 99
       $(".interaction-box").css("z-index", 99);
     }
@@ -570,7 +644,7 @@ $(document).ready(function () {
   $(".close").click(function (e) {
     e.preventDefault();
     // Check if window width is less than 1000
-    if ($(window).width() < 1000) {
+    if ($(window).width() < 850) {
       // Reset z-index of .interaction-box to its default value
       $(".interaction-box").css("z-index", ""); // Empty value resets
     }
@@ -579,7 +653,7 @@ $(document).ready(function () {
 
   // Function to update project size based on window width
   function updateProjectsSize() {
-    if ($(window).width() < 1000) {
+    if ($(window).width() < 850) {
       $(".projects").css({
         width: "30vw",
         height: "100vh",
@@ -594,13 +668,13 @@ $(document).ready(function () {
     }
   }
 
-  if ($(window).width() < 1000) {
-    $(".display-image").css({
-      top: "-46.3%",
-      opacity: 0,
-    });
-    $(".display-image").hide();
-  }
+  //   if ($(window).width() < 800) {
+  //     $(".display-image").css({
+  //       top: "-46.3%",
+  //       opacity: 0,
+  //     });
+  //     $(".display-image").hide();
+  //   }
 
   // Call the function on page load
   $(window).resize(function () {
