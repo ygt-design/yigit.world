@@ -238,7 +238,8 @@ $(document).ready(function () {
 
     // Set the content for the .display-info element for the 'Body' work
     var infoTitle = "1984 (Obliterate)";
-    var infoDescription = "";
+    var infoDescription =
+      "Fascinated by dystopias, I've deconstructed George Orwell's book '1984' from the perspective of a designer working for THE TIMES newspaper within that dystopian world. <br> <br> The design of the newspaper provides visual clues about the aesthetic and design principles prevalent in this dystopian media. It employs a monospace font, avoids hyphenation (prioritizing functionality over aesthetics), and focuses on design solely for its functional purpose. <br> <br> Within the journal of – – –, we witness his transformation from a system-compliant individual to someone who defies the system, committing the forbidden act of independent thinking. However, the journal abruptly ends, leaving – – –'s fate and journey unresolved and shrouded in mystery.";
     // Set the URLs for the additional images
     var additionalImageURLs = [
       "https://www.yigittoprak.com/imagesSecond/oblt/obltTwo.jpg",
