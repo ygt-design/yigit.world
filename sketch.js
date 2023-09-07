@@ -4,22 +4,24 @@ let currentIndex = 0;
 let lastMouseX, lastMouseY;
 const changeThreshold = 20;
 const maxPositions = 20;
-let canvas; 
+let canvas;
+
+// make the hand point to the menu items
 
 function preload() {
-  images[0] = loadImage('./assets/cursor-images/hand.png');
-  images[1] = loadImage('./assets/cursor-images/foil.png');
-  images[2] = loadImage('./assets/cursor-images/cat.png');
-  images[3] = loadImage('./assets/cursor-images/orange.png');
-  images[4] = loadImage('./assets/cursor-images/ink.png');
-  images[5] = loadImage('./assets/cursor-images/calligraphy.png');
-  images[6] = loadImage('./assets/cursor-images/secondHand.png');
+  images[0] = loadImage("./assets/cursor-images/hand.png");
+  images[1] = loadImage("./assets/cursor-images/foil.png");
+  images[2] = loadImage("./assets/cursor-images/cat.png");
+  images[3] = loadImage("./assets/cursor-images/orange.png");
+  images[4] = loadImage("./assets/cursor-images/ink.png");
+  images[5] = loadImage("./assets/cursor-images/calligraphy.png");
+  images[6] = loadImage("./assets/cursor-images/secondHand.png");
 }
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
-  canvas.position(0,0);
-  canvas.style('z-index', '-1');
+  canvas.position(0, 0);
+  canvas.style("z-index", "-1");
   imageMode(CENTER);
   lastMouseX = mouseX;
   lastMouseY = mouseY;

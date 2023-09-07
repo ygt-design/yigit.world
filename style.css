@@ -1,7 +1,9 @@
-@font-face {
-  font-family: 'ar-Narrow';
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* @font-face {
+  font-family: 'Helvetica, sans-serif';
   src: url('./assets/fonts/ARIALN.TTF');
-}
+} */
 
 @font-face {
   font-family: 'JK';
@@ -13,13 +15,14 @@
   -webkit-scrollbar {
     width: 0;
   }
+  font-variant-ligatures: none;
 }
 
 html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: ar-Narrow;
+  font-family: 'Space Mono', monospace;
   scrollbar-width: none;
 }
 
@@ -42,8 +45,9 @@ h1{
 }
 
 p{
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.4rem;
+  font-style: italic;
 }
 
 .container{
@@ -58,6 +62,7 @@ button{
   padding: 10px;
   cursor: pointer;
   color: black;
+  font-family: 'Space Mono', monospace;
 }
 
 button:hover{
@@ -149,7 +154,7 @@ background-color: white;
 }
 
 .projects ul li{
-  font-size: 1.2rem;
+  font-size: 1.02rem;
   padding: 5px 10px 5px 10px; 
   margin-bottom: 15px;
   border: 1px dashed black;
@@ -200,7 +205,6 @@ background-color: white;
   margin-left: auto;
   margin-right: auto;
   color: black;
-  font-size: 2rem;
   margin-top: 20%;
   padding: 15px;
   box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
@@ -215,7 +219,13 @@ background-color: white;
 }
 
 .display-info p{
-  font-size: 1.2rem;
+  border-left: 1px solid gainsboro;
+  padding-left: 5%;
+  margin-left: 5%;
+  padding-right: 10%;
+  font-size: 1rem;
+  font-style: italic;
+  margin-bottom: 5vh;
 }
 
 .additional-images{
@@ -248,11 +258,18 @@ background-color: white;
   z-index: 100;
 }
 
+.info-detail p{
+  border-left: 1px solid gainsboro;
+  padding-left: 5%;
+  margin-left: 5%;
+}
+
 .info-detail span{
   background-color: black;
   color: yellow;
   box-shadow: 0px 0px 20px 1px yellow;
   padding: 2px;
+  font-style: normal;
 }
 
 .site-detail{
@@ -279,40 +296,34 @@ background-color: white;
 }
 
 .mobile .mobile-content{
-  padding: 20px;
   position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0px 0px 20px 1px yellow;
-  text-decoration-line: center;
-  font-size: 2rem;
-  width: 50%;
-  text-align: center;
+  font-size: 1.2rem;
+  width: 80%;
   display: flex;
+  border-left: 1px solid gainsboro;
+  padding-left: 5%;
+  margin-left: 5%;
+  padding-top: 50%;
+  font-weight: bold;
 }
 
 .mobile-progress{
-  color: rgb(174, 174, 174);
-  position: absolute;
-  bottom: 200px;
-  text-align: center; 
-  bottom: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  width: 100%;
+  position: absolute;
+  color: rgb(174, 174, 174);
+  bottom: 30%;
+  font-size: .8rem;
 }
 
 .mobile-progress button{
-  width: auto;
-  aspect-ratio: 2;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: max-content;
+  background-color: white;
+  color: black;
+  font-weight: bold;
 }
 
 @media screen and (max-width: 1000px){
@@ -321,7 +332,7 @@ background-color: white;
   }
 
   h1{
-    font-size: 1rem;
+    font-size: 2rem;
   }
 
   .interaction-box{ 
@@ -359,6 +370,10 @@ background-color: white;
   .projects ul li{
     font-size: .8rem;
   }
+  
+  .projects ul li:hover{
+    transform: translateX(0);
+  }
 
   .works-container{
     top: 0;
@@ -378,8 +393,11 @@ background-color: white;
   }
 
   .display-info p{
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     line-height: .9rem;
+    border: none;
+    margin: 0;
+    padding: 10px;
   }
 
   .info-detail{
@@ -398,4 +416,10 @@ background-color: white;
   .display-image{
     display: none;
   }
+
+.info-detail p{
+  border: none;
+  margin: 0;
+  padding: 0;
+}
 }
