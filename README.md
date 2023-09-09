@@ -1,3 +1,3 @@
-# yigit.world
+# Personal Website
 
-https://ygt-design.github.io/yigit.world/
+yigit.world
