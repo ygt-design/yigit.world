@@ -1,3 +1,3 @@
 # Personal Website
 
- [yigit.world](yigit.world)
+ [yigit.world](http://www.yigit.world/)
