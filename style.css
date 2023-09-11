@@ -178,25 +178,29 @@ background-color: white;
 
 .works-container{
   justify-content: center;
-  width: 55vw;
+  width: 70%;
   height: 100vh;
-  transform: translate(50%, 0);
+  /* background-color: red; */
+  /* transform: translate(50%, 0); */
   overflow-y: scroll;
+  padding-left: 20vw;
 }
 
 .display-image{
   position: absolute;
   background-position: center;
   background-size: cover;
-  width: 55vw;
+  width: 57vw;
   aspect-ratio: 1.6;
   top: -115%;
-  left: 50%;
+  left: 55%;
   transform: translate(-50%, -50%);
   box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
+  border: 1px dashed black;
 }
 
 .display-info{
+  width: 55vw;
   position: relative;
   opacity: 0;
   background-color: white;
@@ -206,7 +210,7 @@ background-color: white;
   margin-left: auto;
   margin-right: auto;
   color: black;
-  margin-top: 20%;
+  margin-top: 8vw;
   padding: 15px;
   box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
 }
@@ -415,6 +419,7 @@ background-color: white;
   }
 
   .display-image{
+    width: 59vw;
     display: none;
   }
 
