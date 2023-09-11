@@ -147,6 +147,11 @@ $(document).ready(function () {
     $(".work").not(this).removeClass("selected");
     $(this).addClass("selected");
 
+    ///write me the code: when clicked on any work the display-image div must be shown and the background image must be changed to the image of the work clicked on and should not get effected by the hover function
+    // Set the background image URL
+    var backgroundImageURL =
+      "https://d2w9rnfcy7mm78.cloudfront.net/21448126/original_f2544505fa25e2762f65304f43a37374.gif?1681835769?bc=0";
+
     // Scroll to the top of .display-info
     $(".works-container").animate({ scrollTop: 100 }, 500, "swing");
   });
@@ -203,6 +208,7 @@ $(document).ready(function () {
         "background-image": "url('" + backgroundImageURL + "')",
         "z-index": 100,
         position: "relative",
+        left: "50%",
       })
       .show();
 
@@ -270,6 +276,7 @@ $(document).ready(function () {
         "background-image": "url('" + backgroundImageURL + "')",
         "z-index": 100,
         position: "relative",
+        left: "50%",
       })
       .show();
 
@@ -322,6 +329,7 @@ $(document).ready(function () {
         "background-image": "url('" + backgroundImageURL + "')",
         "z-index": 100,
         position: "relative",
+        left: "50%",
       })
       .show();
 
@@ -380,6 +388,7 @@ $(document).ready(function () {
         "background-image": "url('" + backgroundImageURL + "')",
         "z-index": 100,
         position: "relative",
+        left: "50%",
       })
       .show();
 
@@ -451,6 +460,7 @@ $(document).ready(function () {
         "background-image": "url('" + backgroundImageURL + "')",
         "z-index": 100,
         position: "relative",
+        left: "50%",
       })
       .show();
 
@@ -499,6 +509,7 @@ $(document).ready(function () {
         "background-image": "url('" + backgroundImageURL + "')",
         "z-index": 100,
         position: "relative",
+        left: "50%",
       })
       .show();
 
@@ -549,6 +560,7 @@ $(document).ready(function () {
         "background-image": "url('" + backgroundImageURL + "')",
         "z-index": 100,
         position: "relative",
+        left: "50%",
       })
       .show();
 
@@ -600,6 +612,7 @@ $(document).ready(function () {
         "background-image": "url('" + backgroundImageURL + "')",
         "z-index": 100,
         position: "relative",
+        left: "50%",
       })
       .show();
 
@@ -651,7 +664,6 @@ $(document).ready(function () {
       // Reset z-index of .interaction-box to its default value
       $(".interaction-box").css("z-index", ""); // Empty value resets
     }
-    // Rest of your close logic here...
   });
 
   // Function to update project size based on window width
@@ -670,14 +682,6 @@ $(document).ready(function () {
       });
     }
   }
-
-  //   if ($(window).width() < 800) {
-  //     $(".display-image").css({
-  //       top: "-46.3%",
-  //       opacity: 0,
-  //     });
-  //     $(".display-image").hide();
-  //   }
 
   // Call the function on page load
   $(window).resize(function () {
