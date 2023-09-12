@@ -144,7 +144,8 @@ background-color: white;
   width: 20vw; 
   bottom: -100vh;
   margin-bottom: 0;
-  height: calc(auto + 100vh);
+  height: calc(auto + 10vh);
+  z-index: 50;
 }
 
 .projects ul{
@@ -163,7 +164,7 @@ background-color: white;
   transition: all 100ms ease-in-out;
   border-radius: 30px;
   /* width: max-content; */
-  z-index: 99;
+  z-index: 100;
   cursor: pointer;
 }
 
@@ -172,7 +173,6 @@ background-color: white;
   background-color: yellow;
   transform: translateX(50px);
   border: 1px solid black;
-  /* animation: shake 450ms ease infinite; */
   cursor: pointer;
 }
 
