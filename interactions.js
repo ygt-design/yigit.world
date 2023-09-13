@@ -423,7 +423,7 @@ $(document).ready(function () {
       "https://d2w9rnfcy7mm78.cloudfront.net/21448126/original_f2544505fa25e2762f65304f43a37374.gif?1681835769?bc=0";
 
     // Set the content for the .display-info element for the 'Body' work
-    var infoTitle = "26 Days of Type";
+    var infoTitle = "Type and Material";
     var infoDescription =
       "In a project spanning 26 days, I set out to create one letter daily using various materials, mediums, and programs. This challenge aimed to explore the interaction between letterforms and their chosen materials. Through this project, I discovered the range of tools and techniques available in my design toolkit, enhancing my awareness of my creative process as I crafted letters each day.";
     var additionalImageURLs = [
