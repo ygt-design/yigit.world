@@ -382,13 +382,14 @@ background-color: white;
 
   .works-container{
     top: 0;
-    right: 0;
+    right: 1vw;
     margin: 0;
     z-index: 100;
     position: fixed;
     width: calc(100% - 40vw);
     height: 100vh;
     overflow-y: scroll;
+    overflow-x: hidden;
     transform: translate(0, 0);
   }
 
@@ -418,14 +419,21 @@ background-color: white;
     z-index: 102;
   }
 
+  .site-detail p{
+    font-size: .8rem;
+    line-height: 1.2rem;
+  }
+
   .display-image{
     width: 59vw;
     display: none;
   }
 
-.info-detail p{
-  border: none;
-  margin: 0;
-  padding: 0;
-}
+  .info-detail p{
+    border: none;
+    margin: 0;
+    padding: 0;
+    font-size: .8rem;
+    line-height: 1.2rem;
+  }
 }
