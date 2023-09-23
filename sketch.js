@@ -6,16 +6,14 @@ const changeThreshold = 20;
 const maxPositions = 20;
 let canvas;
 
-// make the hand point to the menu items
-
 function preload() {
   images[0] = loadImage("./assets/cursor-images/hand.png");
-  images[1] = loadImage("./assets/cursor-images/foil.png");
+  images[1] = loadImage("./assets/cursor-images/pixelHand.png");
   images[2] = loadImage("./assets/cursor-images/cat.png");
-  images[3] = loadImage("./assets/cursor-images/orange.png");
-  images[4] = loadImage("./assets/cursor-images/ink.png");
+  images[3] = loadImage("./assets/cursor-images/manLeaning.png");
+  images[4] = loadImage("./assets/cursor-images/clipHand.png");
   images[5] = loadImage("./assets/cursor-images/calligraphy.png");
-  images[6] = loadImage("./assets/cursor-images/secondHand.png");
+  images[6] = loadImage("./assets/cursor-images/super.png");
 }
 
 function setup() {
@@ -33,17 +31,21 @@ function draw() {
   for (const position of positions) {
     let imgIndex = position.imgIndex;
     let imgToShow = images[imgIndex];
-    image(imgToShow, position.x, position.y, 350, 350);
+    let angle = atan2(height - position.y, width - position.x);
+    push();
+    translate(position.x, position.y);
+    rotate(angle);
+    image(imgToShow, 0, 0, 350, 350);
+    pop();
   }
 
   let distance = dist(mouseX, mouseY, lastMouseX, lastMouseY);
 
-  // Check if the cursor moved beyond the threshold
   if (distance > changeThreshold) {
     positions.push({ x: lastMouseX, y: lastMouseY, imgIndex: currentIndex });
 
     if (positions.length > maxPositions) {
-      positions.shift(); // Remove the first element
+      positions.shift();
     }
 
     currentIndex = (currentIndex + 1) % images.length;
@@ -53,7 +55,12 @@ function draw() {
   lastMouseY = mouseY;
 
   let currentImage = images[currentIndex];
-  image(currentImage, mouseX, mouseY, 350, 350);
+  let angle = atan2(height - mouseY, width - mouseX);
+  push();
+  translate(mouseX, mouseY);
+  rotate(angle);
+  image(currentImage, 0, 0, 350, 350);
+  pop();
 }
 
 function keyPressed() {
