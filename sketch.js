@@ -11,8 +11,8 @@ function preload() {
   images[1] = loadImage("./assets/cursor-images/pixelHand.png");
   images[2] = loadImage("./assets/cursor-images/cat.png");
   images[3] = loadImage("./assets/cursor-images/manLeaning.png");
-  images[4] = loadImage("./assets/cursor-images/clipHand.png");
-  images[5] = loadImage("./assets/cursor-images/calligraphy.png");
+  images[4] = loadImage("./assets/cursor-images/orange.png");
+  images[5] = loadImage("./assets/cursor-images/foil.png");
   images[6] = loadImage("./assets/cursor-images/super.png");
 }
 
