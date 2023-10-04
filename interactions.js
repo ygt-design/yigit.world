@@ -90,6 +90,31 @@ $(document).ready(function () {
     );
   });
 
+  $(".questionInteraction").click(function (e) {
+    e.preventDefault();
+    $(".question-detail")
+      .animate(
+        {
+          left: "15%",
+        },
+        300
+      )
+      .show();
+  });
+
+  $(".close-question").click(function (e) {
+    e.preventDefault();
+    $(".question-detail").animate(
+      {
+        left: "-50%",
+      },
+      300,
+      function () {
+        $(this).hide();
+      }
+    );
+  });
+
   $(".work").hover(
     function () {
       var backgroundImageURL = "";
