@@ -144,7 +144,8 @@ background-color: white;
   width: 20vw; 
   bottom: -100vh;
   margin-bottom: 0;
-  height: calc(auto + 10vh);
+  height: calc(auto + 5vh);
+  overflow-y: scroll;
   z-index: 50;
 }
 
@@ -171,7 +172,7 @@ background-color: white;
 .projects ul li:hover{
   color: black;
   background-color: yellow;
-  transform: translateX(50px);
+  /* transform: translateX(50px); */
   border: 1px solid black;
   cursor: pointer;
   border-radius: 0;
