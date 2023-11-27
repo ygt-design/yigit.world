@@ -144,7 +144,7 @@ background-color: white;
   width: 20vw; 
   bottom: -100vh;
   margin-bottom: 0;
-  height: calc(auto + 5vh);
+  height: calc(auto - 30px);
   overflow-y: scroll;
   z-index: 50;
 }
