@@ -2,8 +2,8 @@ let images = [];
 let positions = [];
 let currentIndex = 0;
 let lastMouseX, lastMouseY;
-const changeThreshold = 20;
-const maxPositions = 20;
+const changeThreshold = 8;
+const maxPositions = 25;
 let canvas;
 
 function preload() {
@@ -28,13 +28,40 @@ function setup() {
 function draw() {
   background(255);
 
-  for (const position of positions) {
+  // Handle the disappearance animation for the oldest image
+  if (positions.length > 0) {
+    let oldestPosition = positions[0];
+    let oldestImage = images[oldestPosition.imgIndex];
+
+    let distanceToMouse = dist(
+      oldestPosition.x,
+      oldestPosition.y,
+      mouseX,
+      mouseY
+    );
+    let scaleValue = map(distanceToMouse, 0, width, 1, 0);
+
+    push();
+    translate(oldestPosition.x, oldestPosition.y);
+    rotate(atan2(height - oldestPosition.y, width - oldestPosition.x));
+    scale(scaleValue);
+    image(oldestImage, 0, 0, 350, 350);
+    pop();
+  }
+
+  // Draw the other images
+  for (let i = 1; i < positions.length; i++) {
+    let position = positions[i];
     let imgIndex = position.imgIndex;
     let imgToShow = images[imgIndex];
-    let angle = atan2(height - position.y, width - position.x);
+
+    let distanceToMouse = dist(position.x, position.y, mouseX, mouseY);
+    let scaleValue = map(distanceToMouse, 0, width, 1, 0);
+
     push();
     translate(position.x, position.y);
-    rotate(angle);
+    rotate(atan2(height - position.y, width - position.x));
+    scale(scaleValue);
     image(imgToShow, 0, 0, 350, 350);
     pop();
   }
@@ -42,7 +69,11 @@ function draw() {
   let distance = dist(mouseX, mouseY, lastMouseX, lastMouseY);
 
   if (distance > changeThreshold) {
-    positions.push({ x: lastMouseX, y: lastMouseY, imgIndex: currentIndex });
+    positions.push({
+      x: lastMouseX,
+      y: lastMouseY,
+      imgIndex: currentIndex,
+    });
 
     if (positions.length > maxPositions) {
       positions.shift();
@@ -53,14 +84,6 @@ function draw() {
 
   lastMouseX = mouseX;
   lastMouseY = mouseY;
-
-  let currentImage = images[currentIndex];
-  let angle = atan2(height - mouseY, width - mouseX);
-  push();
-  translate(mouseX, mouseY);
-  rotate(angle);
-  image(currentImage, 0, 0, 350, 350);
-  pop();
 }
 
 function keyPressed() {
