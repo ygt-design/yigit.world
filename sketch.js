@@ -2,17 +2,17 @@ let images = [];
 let positions = [];
 let currentIndex = 0;
 let lastMouseX, lastMouseY;
-const changeThreshold = 8;
+const changeThreshold = 15;
 const maxPositions = 25;
 let canvas;
 
 function preload() {
-  images[0] = loadImage("./assets/cursor-images/hand.png");
+  images[0] = loadImage("./assets/cursor-images/line.png");
   images[1] = loadImage("./assets/cursor-images/pixelHand.png");
-  images[2] = loadImage("./assets/cursor-images/cat.png");
+  images[2] = loadImage("./assets/cursor-images/fold.png");
   images[3] = loadImage("./assets/cursor-images/manLeaning.png");
-  images[4] = loadImage("./assets/cursor-images/orange.png");
-  images[5] = loadImage("./assets/cursor-images/rOne.png");
+  images[4] = loadImage("./assets/cursor-images/hand.png");
+  images[5] = loadImage("./assets/cursor-images/pyramid.png");
   images[6] = loadImage("./assets/cursor-images/super.png");
 }
 
