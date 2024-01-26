@@ -151,6 +151,8 @@ $(document).ready(function () {
       } else if ($(this).hasClass("interview")) {
         backgroundImageURL =
           "./assets/images/interviewPublication/publicationGif.gif";
+      } else if ($(this).hasClass("duckinator")) {
+        backgroundImageURL = "./assets/images/duckinator/duckOne.jpg";
       }
 
       $(".display-image")
@@ -545,6 +547,75 @@ $(document).ready(function () {
       })
       .show();
   });
+
+  $(".duckinator").click(function (e) {
+    e.preventDefault();
+
+    // Set the background media URL
+    var backgroundMediaURL =
+      "./assets/images/duckinator/duckinatorGifs/aniFive.gif";
+
+    // Set the content for the .display-info element for the 'Body' work
+    var infoTitle = "Duckinator Typeface";
+    var infoDescription =
+      "In collaboration with Aaryan Pashine we have created the Duckinator Typeface. The machine we built in order to create the typeface offered collaborative making, each individual using an axis either by using the potentiometer and the other person using the scrolling machine to move the machine back and forth. <br><br> The machine aims to combine two separately crafted machines to make a singe machine in order to offer an alternative process for typeface design. Its primary objective is to generate creative outputs without predetermined aim, embracing the unpredictability of the machine's working process.";
+    var mediaItems = [
+      { type: "image", url: "./assets/images/duckinator/duckOne.jpg" },
+      {
+        type: "video",
+        url: "./assets/images/duckinator/duckVideoTwo.mp4",
+      },
+      { type: "image", url: "./assets/images/duckinator/duckThree.jpg" },
+      {
+        type: "video",
+        url: "./assets/images/duckinator/duckVideoOne.mp4",
+      },
+      {
+        type: "video",
+        url: "./assets/images/duckinator/duckVideoThree.mp4",
+      },
+      { type: "image", url: "./assets/images/duckinator/duckTwo.jpg" },
+    ];
+
+    $(".display-media")
+      .html("")
+      .append(createMediaElement("background", backgroundMediaURL));
+
+    var additionalMediaHTML = mediaItems
+      .map((media) => {
+        return createMediaElement(media.type, media.url);
+      })
+      .join("");
+
+    // Use template literals for h1 and p elements
+    var contentHTML = `
+        <h1>${infoTitle}</h1>
+        <p>${infoDescription}</p>
+        <div class="additional-media">${additionalMediaHTML}</div>
+    `;
+
+    $(".display-info")
+      .html(contentHTML)
+      .css({
+        display: "block",
+        position: "relative",
+        opacity: 1,
+      })
+      .show();
+  });
+
+  function createMediaElement(type, url) {
+    switch (type) {
+      case "image":
+        return `<img  width="100%" class="media-item" src="${url}" alt="Image">`;
+      case "gif":
+        return `<img  width="100%" class="media-item" src="${url}" alt="GIF">`;
+      case "video":
+        return `<video autoplay="autoplay" loop class="media-item" width="100%" controls><source src="${url}" type="video/mp4"></video>`;
+      default:
+        return "";
+    }
+  }
 
   $(".type").click(function (e) {
     e.preventDefault();
