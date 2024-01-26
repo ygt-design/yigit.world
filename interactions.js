@@ -148,6 +148,9 @@ $(document).ready(function () {
       } else if ($(this).hasClass("type")) {
         backgroundImageURL =
           "https://d2w9rnfcy7mm78.cloudfront.net/21448126/original_f2544505fa25e2762f65304f43a37374.gif?1681835769?bc=0";
+      } else if ($(this).hasClass("interview")) {
+        backgroundImageURL =
+          "./assets/images/interviewPublication/publicationGif.gif";
       }
 
       $(".display-image")
@@ -406,6 +409,109 @@ $(document).ready(function () {
       "https://www.yigittoprak.com/imagesSecond/wood/woodTen.jpg",
       "https://www.yigittoprak.com/imagesSecond/wood/woodEleven.jpg",
       "https://www.yigittoprak.com/imagesSecond/wood/woodTwelve.jpg",
+    ];
+
+    $(".display-image")
+      .css({
+        "background-image": "url('" + backgroundImageURL + "')",
+        "z-index": 100,
+        position: "relative",
+        left: "50%",
+      })
+      .show();
+
+    var additionalImagesHTML = additionalImageURLs
+      .map((imageURL) => {
+        return `<img src="${imageURL}" alt="Additional Image">`;
+      })
+      .join("");
+
+    // Use template literals for h1 and p elements
+    var contentHTML = `
+            <h1>${infoTitle}</h1>
+            <p>${infoDescription}</p>
+            <div class="additional-images">${additionalImagesHTML}</div>
+        `;
+
+    $(".display-info")
+      .html(contentHTML)
+      .css({
+        display: "block",
+        position: "relative",
+        opacity: 1,
+      })
+      .show();
+  });
+
+  $(".interview").click(function (e) {
+    e.preventDefault();
+
+    // Set the background image URL
+    var backgroundImageURL =
+      "./assets/images/interviewPublication/publicationGif.gif";
+
+    // Set the content for the .display-info element for the 'Body' work
+    var infoTitle = "Interview Publication";
+    var infoDescription =
+      "In the beginning of the first semester, I have interviewed the people in my thesis class. I asked them questions about their thesis and their design process. As I was interviewing my peers I realized they were mostly interested in similar topics. That is why I created a categorization system under the seven main categories people were interested in about doing their thesis.";
+    var additionalImageURLs = [
+      "./assets/images/interviewPublication/publicationOne.jpg",
+      "./assets/images/interviewPublication/publicationTwo.jpg",
+      "./assets/images/interviewPublication/publicationFour.jpg",
+      "./assets/images/interviewPublication/publicationThree.jpg",
+      "./assets/images/interviewPublication/publicationSix.jpg",
+      "./assets/images/interviewPublication/publicationTwoAnimated.gif",
+      "./assets/images/interviewPublication/publicationFive.jpg",
+      "./assets/images/interviewPublication/publicationSeven.jpg",
+    ];
+
+    $(".display-image")
+      .css({
+        "background-image": "url('" + backgroundImageURL + "')",
+        "z-index": 100,
+        position: "relative",
+        left: "50%",
+      })
+      .show();
+
+    var additionalImagesHTML = additionalImageURLs
+      .map((imageURL) => {
+        return `<img src="${imageURL}" alt="Additional Image">`;
+      })
+      .join("");
+
+    // Use template literals for h1 and p elements
+    var contentHTML = `
+            <h1>${infoTitle}</h1>
+            <p>${infoDescription}</p>
+            <div class="additional-images">${additionalImagesHTML}</div>
+        `;
+
+    $(".display-info")
+      .html(contentHTML)
+      .css({
+        display: "block",
+        position: "relative",
+        opacity: 1,
+      })
+      .show();
+  });
+
+  $(".machine").click(function (e) {
+    e.preventDefault();
+
+    // Set the background image URL
+    var backgroundImageURL = "https://www.yigittoprak.com/images/Cree.JPG";
+
+    // Set the content for the .display-info element for the 'Body' work
+    var infoTitle = " Dialogue With The Machine";
+    var infoDescription =
+      "The poster/cover designs were created in response to Sebastian Aubin's 'Dialogue With the Machine' project, which featured the development of a monospace Cree syllabic font. A monospace font in Swampy Cree (Fort Severn) Syllabics was hand-drawn to connect the past and present. This approach contrasts and combines with Aubin's aim to change the interaction between Cree people and machines. <br> <br> The distortion in the artwork symbolizes the Cree community's transition to a daily life that includes technology and coding. Jordan Bennett's 'pi'tawita'iek: we go up river' served as an influence, shaping the concept of flow in the creative process.";
+    var additionalImageURLs = [
+      "https://www.yigittoprak.com/images/1C.jpg",
+      "https://www.yigittoprak.com/images/3C.jpg",
+      "https://www.yigittoprak.com/images/2C.jpg",
+      "https://www.yigittoprak.com/images/4C.jpg",
     ];
 
     $(".display-image")
