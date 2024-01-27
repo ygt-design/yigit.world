@@ -178,6 +178,25 @@ background-color: white;
   border-radius: 0;
 }
 
+.new{
+  color: magenta;
+  font-size: .8em;
+  text-align: right;
+  margin-right: 10px;
+  animation: shake 650ms ease infinite;
+}
+
+.newTwo{
+  animation-delay: 100ms;
+}
+
+.work{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
 .works-container{
   justify-content: center;
   width: 70%;
@@ -477,3 +496,4 @@ video::-webkit-media-controls-panel {
 video::-webkit-media-controls-play-button {
   display:none !important;
 }
+
