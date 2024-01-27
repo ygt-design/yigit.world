@@ -152,7 +152,7 @@ $(document).ready(function () {
         backgroundImageURL =
           "./assets/images/interviewPublication/publicationGif.gif";
       } else if ($(this).hasClass("duckinator")) {
-        backgroundImageURL = "./assets/images/duckinator/duckOne.jpg";
+        backgroundImageURL = "./assets/images/duckinator/aDrawing.gif";
       }
 
       $(".display-image")
@@ -185,28 +185,6 @@ $(document).ready(function () {
     // Scroll to the top of .display-info
     $(".works-container").animate({ scrollTop: 100 }, 500, "swing");
   });
-
-  // $(".body").click(function (e) {
-  //     e.preventDefault();
-
-  //     var backgroundImageURL = 'https://www.yigittoprak.com/imagesSecond/imagesOfBodyandStory/imgBodyOne.jpg';
-
-  //     $('.display-image').css({
-  //         "background-image": "url('" + backgroundImageURL + "')",
-  //         "position": "relative",
-  //         "top": "46.3%",
-  //         "left": "50%",
-  //         "transform": "translate(-50%, -50%)",
-  //         "opacity": 1,
-  //         "z-index": 9999
-  //     }).show();
-
-  //     $('.display-info').css({
-  //         "display": "block",
-  //         "opacity": 1,
-  //     }).show();
-
-  // });
 
   $(".body").click(function (e) {
     e.preventDefault();
@@ -563,6 +541,10 @@ $(document).ready(function () {
       { type: "image", url: "./assets/images/duckinator/duckOne.jpg" },
       {
         type: "video",
+        url: "./assets/images/duckinator/duckinatorProcess.mp4",
+      },
+      {
+        type: "video",
         url: "./assets/images/duckinator/duckVideoTwo.mp4",
       },
       { type: "image", url: "./assets/images/duckinator/duckThree.jpg" },
@@ -570,12 +552,21 @@ $(document).ready(function () {
         type: "video",
         url: "./assets/images/duckinator/duckVideoOne.mp4",
       },
+
       {
         type: "video",
         url: "./assets/images/duckinator/duckVideoThree.mp4",
       },
       { type: "image", url: "./assets/images/duckinator/duckTwo.jpg" },
     ];
+
+    $(".display-image")
+      .css({
+        "z-index": 100,
+        position: "relative",
+        left: "50%",
+      })
+      .show();
 
     $(".display-media")
       .html("")
@@ -611,7 +602,7 @@ $(document).ready(function () {
       case "gif":
         return `<img  width="100%" class="media-item" src="${url}" alt="GIF">`;
       case "video":
-        return `<video autoplay="autoplay" loop class="media-item" width="100%" controls><source src="${url}" type="video/mp4"></video>`;
+        return `<video autoplay="autoplay" playsinline loop class="media-item" width="100%" controls><source src="${url}" type="video/mp4"></video>`;
       default:
         return "";
     }
