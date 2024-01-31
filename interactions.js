@@ -602,7 +602,7 @@ $(document).ready(function () {
       case "gif":
         return `<img  width="100%" class="media-item" src="${url}" alt="GIF">`;
       case "video":
-        return `<video autoplay="autoplay" playsinline loop class="media-item" width="100%" controls><source src="${url}" type="video/mp4"></video>`;
+        return `<video autoplay="autoplay" playsinline loop class="media-item" width="100%"><source src="${url}" type="video/mp4"></video>`;
       default:
         return "";
     }
