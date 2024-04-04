@@ -153,6 +153,8 @@ $(document).ready(function () {
           "./assets/images/interviewPublication/publicationGif.gif";
       } else if ($(this).hasClass("duckinator")) {
         backgroundImageURL = "./assets/images/duckinator/aDrawing.gif";
+      } else if ($(this).hasClass("manicule")) {
+        backgroundImageURL = "./assets/images/manicule/maniculeJpg.jpg";
       }
 
       $(".display-image")
@@ -529,7 +531,6 @@ $(document).ready(function () {
   $(".duckinator").click(function (e) {
     e.preventDefault();
 
-    // Set the background media URL
     var backgroundMediaURL =
       "./assets/images/duckinator/duckinatorGifs/aniFive.gif";
 
@@ -598,7 +599,8 @@ $(document).ready(function () {
   $(".manicule").click(function (e) {
     e.preventDefault();
 
-    var backgroundMediaURL = "./assets/images/manicule/manicule.png";
+    var backgroundMediaURL = "./assets/images/duckinator/duckTwo.jpg";
+    console.log("backgroundMediaURL");
 
     var infoTitle = "Manicule of Resistance";
     var infoDescription =
