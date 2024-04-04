@@ -182,7 +182,7 @@ background-color: white;
   color: magenta;
   font-size: .8em;
   text-align: right;
-  margin-right: 10px;
+  /* margin-right: 10px; */
   animation: shake 650ms ease infinite;
 }
 

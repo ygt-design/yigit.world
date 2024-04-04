@@ -595,18 +595,104 @@ $(document).ready(function () {
       .show();
   });
 
-  function createMediaElement(type, url) {
-    switch (type) {
-      case "image":
-        return `<img  width="100%" class="media-item" src="${url}" alt="Image">`;
-      case "gif":
-        return `<img  width="100%" class="media-item" src="${url}" alt="GIF">`;
-      case "video":
-        return `<video autoplay="autoplay" playsinline loop class="media-item" width="100%"><source src="${url}" type="video/mp4"></video>`;
-      default:
-        return "";
-    }
-  }
+  $(".manicule").click(function (e) {
+    e.preventDefault();
+
+    var backgroundMediaURL = "./assets/images/manicule/manicule.png";
+
+    var infoTitle = "Manicule of Resistance";
+    var infoDescription =
+      "In collaboration with Aaryan Pashine we have created the Duckinator Typeface. The machine we built in order to create the typeface offered collaborative making, each individual using an axis either by using the potentiometer and the other person using the scrolling machine to move the machine back and forth. <br><br> The machine aims to combine two separately crafted machines to make a singe machine in order to offer an alternative process for typeface design. Its primary objective is to generate creative outputs without predetermined aim, embracing the unpredictability of the machine's working process.";
+    var mediaItems = [
+      {
+        type: "image",
+        url: "https://d2w9rnfcy7mm78.cloudfront.net/26123198/original_2b35e9fd338b579ed04be151e574d0af.png?1707008947?bc=0",
+      },
+      {
+        type: "image",
+        url: "https://d2w9rnfcy7mm78.cloudfront.net/26022098/original_a190545a8f49834d2a2df9c8f96a0f43.png?1706624831?bc=0",
+      },
+      // {
+      //   type: "video",
+      //   url: "./assets/images/manicule/maniculeVideos/daniel.mp4",
+      // },
+      {
+        type: "image",
+        url: "https://d2w9rnfcy7mm78.cloudfront.net/26216559/original_15b77c7ec29016294d6dbd7df85b794a.jpg?1707366689?bc=0",
+      },
+      {
+        type: "video",
+        url: "./assets/images/manicule/maniculeVideos/hannahDance.mov",
+      },
+      {
+        type: "image",
+        url: "https://d2w9rnfcy7mm78.cloudfront.net/26310135/original_93c94e12bd574ddb52c030d71b18fe14.png?1707784665?bc=0",
+      },
+      {
+        type: "video",
+        url: "./assets/images/manicule/maniculeVideos/iAmButton.mp4",
+      },
+      // {
+      //   type: "video",
+      //   url: "./assets/images/manicule/maniculeVideos/yigitTest.mp4",
+      // },
+      {
+        type: "image",
+        url: "https://d2w9rnfcy7mm78.cloudfront.net/26190019/original_2d8ef79eeef5822cbb88402afd7170b3.png?1707263118?bc=0",
+      },
+      {
+        type: "video",
+        url: "./assets/images/manicule/maniculeVideos/rose.mp4",
+      },
+      // {
+      //   type: "video",
+      //   url: "./assets/images/manicule/maniculeVideos/alexVid.mp4",
+      // },
+      {
+        type: "image",
+        url: "https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiIyNjE5MDcyNy9vcmlnaW5hbF8wMjlhYmYzZDBiZGUxMWM4ZmQ0MDBiYTQwYmFjMGE3Yi5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjEyMDAsImhlaWdodCI6MTIwMCwiZml0IjoiaW5zaWRlIiwid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlfSwid2VicCI6eyJxdWFsaXR5Ijo4NX0sImZsYXR0ZW4iOnsiYmFja2dyb3VuZCI6eyJyIjoyMDMsImciOjIwMywiYiI6MjAzfX0sImpwZWciOnsicXVhbGl0eSI6ODV9LCJyb3RhdGUiOm51bGx9fQ==",
+      },
+
+      {
+        type: "image",
+        url: "https://d2w9rnfcy7mm78.cloudfront.net/26133966/original_dd0a4a5b7e6791c75097a0e7173b3bf6.png?1707077138?bc=0",
+      },
+    ];
+
+    $(".display-image")
+      .css({
+        "z-index": 100,
+        position: "relative",
+        left: "50%",
+      })
+      .show();
+
+    $(".display-media")
+      .html("")
+      .append(createMediaElement("background", backgroundMediaURL));
+
+    var additionalMediaHTML = mediaItems
+      .map((media) => {
+        return createMediaElement(media.type, media.url);
+      })
+      .join("");
+
+    // Use template literals for h1 and p elements
+    var contentHTML = `
+        <h1>${infoTitle}</h1>
+        <p>${infoDescription}</p>
+        <div class="additional-media">${additionalMediaHTML}</div>
+    `;
+
+    $(".display-info")
+      .html(contentHTML)
+      .css({
+        display: "block",
+        position: "relative",
+        opacity: 1,
+      })
+      .show();
+  });
 
   $(".type").click(function (e) {
     e.preventDefault();
@@ -880,4 +966,17 @@ $(document).ready(function () {
   $(window).resize(function () {
     updateProjectsSize();
   });
+
+  function createMediaElement(type, url) {
+    switch (type) {
+      case "image":
+        return `<img  width="100%" class="media-item" src="${url}" alt="Image">`;
+      case "gif":
+        return `<img  width="100%" class="media-item" src="${url}" alt="GIF">`;
+      case "video":
+        return `<video autoplay="autoplay" playsinline loop class="media-item" width="100%"><source src="${url}" type="video/mp4"></video>`;
+      default:
+        return "";
+    }
+  }
 });
