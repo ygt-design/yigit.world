@@ -187,7 +187,12 @@ background-color: white;
 }
 
 .newTwo{
-  animation-delay: 100ms;
+  color: magenta;
+  font-size: .8em;
+  text-align: right;
+  /* margin-right: 10px; */
+  animation: shake 650ms ease infinite;
+  animation-delay: 230ms;
 }
 
 .work{
