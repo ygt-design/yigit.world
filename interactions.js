@@ -964,7 +964,6 @@ $(document).ready(function () {
     }
   }
 
-  // Call the function on page load
   $(window).resize(function () {
     updateProjectsSize();
   });
