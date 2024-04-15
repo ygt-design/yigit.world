@@ -90,6 +90,33 @@ $(document).ready(function () {
     );
   });
 
+  $(".manifesto").click(function (e) {
+    e.preventDefault();
+    $(".manifesto-detail")
+      .animate(
+        {
+          left: "20%",
+          top: "40%",
+        },
+        300
+      )
+      .show();
+  });
+
+  $(".close-manifesto").click(function (e) {
+    e.preventDefault();
+    $(".manifesto-detail").animate(
+      {
+        left: "-20%",
+        top: "-40%",
+      },
+      300,
+      function () {
+        $(this).hide();
+      }
+    );
+  });
+
   $(".questionInteraction").click(function (e) {
     e.preventDefault();
     $(".question-detail")
@@ -155,6 +182,9 @@ $(document).ready(function () {
         backgroundImageURL = "./assets/images/duckinator/aDrawing.gif";
       } else if ($(this).hasClass("manicule")) {
         backgroundImageURL = "./assets/images/manicule/maniculeJpg.jpg";
+      } else if ($(this).hasClass("interact-reward")) {
+        backgroundImageURL =
+          "./assets/images/interactionBox/interactionBoxThumbnail.jpg";
       }
 
       $(".display-image")
@@ -559,6 +589,78 @@ $(document).ready(function () {
         url: "./assets/images/duckinator/duckVideoThree.mp4",
       },
       { type: "image", url: "./assets/images/duckinator/duckTwo.jpg" },
+    ];
+
+    $(".display-image")
+      .css({
+        "z-index": 100,
+        position: "relative",
+        left: "50%",
+      })
+      .show();
+
+    $(".display-media")
+      .html("")
+      .append(createMediaElement("background", backgroundMediaURL));
+
+    var additionalMediaHTML = mediaItems
+      .map((media) => {
+        return createMediaElement(media.type, media.url);
+      })
+      .join("");
+
+    // Use template literals for h1 and p elements
+    var contentHTML = `
+        <h1>${infoTitle}</h1>
+        <p>${infoDescription}</p>
+        <div class="additional-media">${additionalMediaHTML}</div>
+    `;
+
+    $(".display-info")
+      .html(contentHTML)
+      .css({
+        display: "block",
+        position: "relative",
+        opacity: 1,
+      })
+      .show();
+  });
+
+  $(".interact-reward").click(function (e) {
+    e.preventDefault();
+
+    var backgroundMediaURL =
+      "./assets/images/interactionBox/interactionBoxThumbnail.jpg";
+
+    // Set the content for the .display-info element for the 'Body' work
+    var infoTitle = "[Interrupt]—Check—Interact—Reward";
+    var infoDescription =
+      "[Interrupt] — Check — Interact — Reward aims to materialize the volume of notifications we receive, transforming them from abstract, digital signals into a physical, tangible reality. By doing so, it seeks to reveal the true scale of our interaction with these digital prompts, which are ordinarily confined to the small boxes in our hands.";
+    var mediaItems = [
+      {
+        type: "image",
+        url: "./assets/images/interactionBox/interactionBoxThumbnail.jpg",
+      },
+      {
+        type: "video",
+        url: "./assets/images/interactionBox/checkReward.mp4",
+      },
+      {
+        type: "image",
+        url: "./assets/images/interactionBox/receipt.jpg",
+      },
+      {
+        type: "image",
+        url: "./assets/images/interactionBox/printer.gif",
+      },
+      {
+        type: "image",
+        url: "./assets/images/interactionBox/receiptTwo.jpg",
+      },
+      {
+        type: "image",
+        url: "./assets/images/interactionBox/topView.jpg",
+      },
     ];
 
     $(".display-image")
