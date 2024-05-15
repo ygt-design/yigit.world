@@ -24,6 +24,7 @@ html, body {
   box-sizing: border-box;
   font-family: 'Space Mono', monospace;
   scrollbar-width: none;
+  overflow: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -138,6 +139,7 @@ background-color: white;
 .projects{
   display: none;
   margin: 15px;
+  max-height: 90vh;
   position: absolute;
   box-shadow: 0px 0px 20px 1px rgb(73, 73, 73);
   background-color: white;
@@ -148,6 +150,12 @@ background-color: white;
   height: calc(auto - 30px);
   overflow-y: scroll;
   z-index: 50;
+}
+
+.projects .close{
+  position: sticky;
+  top: 5px;
+  z-index: +1;
 }
 
 .projects ul{
@@ -195,6 +203,35 @@ background-color: white;
   animation: shake 650ms ease infinite;
   animation-delay: 230ms;
 }
+
+.forMore{
+  position: sticky;
+  top: 85vh;
+  right: 0;
+  color: magenta;
+  font-size: 2em;
+  transform-origin: right;
+  text-align: right;
+  animation: upAndDown 650ms ease infinite;
+  /* border: 1px solid red; */
+  z-index: -1;
+}
+
+@keyframes upAndDown{
+  0%{
+    transform: translateY(0);
+  }
+
+  50%{
+    transform: translateY(-10px);
+  }
+
+  100%{
+    transform: translateY(0);
+  }
+
+}
+
 
 .work{
   display: flex;
