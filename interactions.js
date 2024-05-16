@@ -170,8 +170,8 @@ $(document).ready(function () {
           "https://www.yigittoprak.com/images/Map_04_page-0001.jpg";
       } else if ($(this).hasClass("factory")) {
         backgroundImageURL = "https://www.yigittoprak.com/images/3.jpg";
-      } else if ($(this).hasClass("process")) {
-        backgroundImageURL = "https://www.yigittoprak.com/images/Process.png";
+      } else if ($(this).hasClass("cyber")) {
+        backgroundImageURL = "./assets/images/tvo/tvoSite.jpg";
       } else if ($(this).hasClass("type")) {
         backgroundImageURL =
           "https://d2w9rnfcy7mm78.cloudfront.net/21448126/original_f2544505fa25e2762f65304f43a37374.gif?1681835769?bc=0";
