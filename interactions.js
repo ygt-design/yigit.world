@@ -185,6 +185,8 @@ $(document).ready(function () {
       } else if ($(this).hasClass("interact-reward")) {
         backgroundImageURL =
           "./assets/images/interactionBox/interactionBoxThumbnail.jpg";
+      } else if ($(this).hasClass("steve")) {
+        backgroundImageURL = "./assets/images/steve/steveWebTilt.gif";
       }
 
       $(".display-image")
