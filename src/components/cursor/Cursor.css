@@ -1,0 +1,63 @@
+/* Only hide the native cursor and show the custom ring on devices with a
+   real hovering pointer (mouse/trackpad). On touch/coarse-pointer devices the
+   ring would sit stuck at the last tap, so leave the native cursor alone. */
+@media (hover: hover) and (pointer: fine) {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-ring {
+    display: none;
+  }
+}
+
+.cursor-ring {
+  --cursor-color: #000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+}
+
+/* Tip sits at ~(30.39, 0) in the 58.23×86.44 viewBox → ~52.2% / 0%. */
+.cursor-pointer {
+  display: block;
+  width: 38px;
+  height: auto;
+  color: var(--cursor-color);
+  transform-origin: 52.2% 0%;
+  transform: translate(-52.2%, 0%);
+  transition: transform 0.12s ease, color 0.12s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+.cursor-pointer :is(path, polygon) {
+  fill: currentColor;
+}
+
+.cursor-pointer line {
+  fill: none;
+  stroke: currentColor;
+  stroke-miterlimit: 10;
+}
+
+.cursor-ring.is-pointer .cursor-pointer {
+  transform: translate(-52.2%, 0%) scale(1.5) rotate(-25deg);
+  color: rgb(171, 171, 171);
+}
+
+/* Over a dark background the default black cursor disappears, so flip white. */
+.cursor-ring.is-on-dark {
+  --cursor-color: #fff;
+}
+
+.cursor-ring.is-on-dark.is-pointer .cursor-pointer {
+  color: rgb(230, 230, 230);
+}

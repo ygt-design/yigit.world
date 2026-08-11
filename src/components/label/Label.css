@@ -1,0 +1,265 @@
+.label-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.label-stage {
+  box-sizing: border-box;
+  position: relative;
+  width: 280px;
+  height: 410px; 
+  background-color: #fff;
+  border-bottom: 0.5px solid rgba(123, 123, 123, 0.5);
+  border-right: 0.5px solid rgba(123, 123, 123, 0.5);
+  --label-grid-size: 20px;
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(123, 123, 123, 0.5) 0,
+      rgba(123, 123, 123, 0.5) 0.5px,
+      transparent 0.5px,
+      transparent var(--label-grid-size)
+    ),
+    linear-gradient(
+      to right,
+      rgba(123, 123, 123, 0.5) 0,
+      rgba(123, 123, 123, 0.5) 0.5px,
+      transparent 0.5px,
+      transparent var(--label-grid-size)
+    );
+  background-size: var(--label-grid-size) var(--label-grid-size);
+  background-position: top left;
+  background-origin: border-box;
+  background-clip: border-box;
+
+}
+
+.label-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+
+.label-back-panel,
+.label-back-layer {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(var(--back-width, 350px), calc(50vw + 120px - 20px));
+  height: auto;
+  background-color: #fff;
+  border: none;
+  transform-origin: var(--pin-x) top; /* shared pin */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Stacked sheets sit behind the main panel; soft shadow separates them as they
+   swing out and reveal themselves. */
+.label-back-layer {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+}
+
+.label-swing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 410px;
+  transform-origin: var(--pin-x) top; /* rotate around the pin */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.label-pin {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: var(--pin-x);
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.label-pin::before,
+.label-pin::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #131313;
+  transform-origin: center;
+}
+
+.label-pin::before {
+  transform: rotate(45deg);
+}
+
+.label-pin::after {
+  transform: rotate(-45deg);
+}
+
+.label-box {
+  box-sizing: border-box;
+  container-type: size;
+  position: relative;
+  min-width: 280px;
+  width: 280px;
+  height: 410px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.10);
+  border: 0.5px solid rgba(123, 123, 123, 0.5);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  color: #000;
+  --label-grain-opacity: 0.06;
+  --label-grain-size: 250px;
+}
+
+/* The frosted glass. NOT backdrop-filter: live backdrop sampling glitches and
+   flickers whenever the label or the swing panel rotates (the compositor's
+   backdrop snapshots desync from the transforms). Instead the glass holds
+   ghost copies of exactly what sits behind it — the stage grid and the back
+   media stills — blurred with a regular self-contained `filter: blur()`. The
+   physics loop in Label.jsx counter-rotates the ghosts every frame so they
+   stay pixel-aligned with the real elements; the glass never has to sample
+   anything outside itself, so it can stay on during hovers and swings. */
+.label-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Translucent white veil over the blurred ghosts (paints above them). */
+.label-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.label-glass-blur {
+  position: absolute;
+  inset: 0;
+  filter: blur(6px);
+}
+
+/* Ghost of the stage's grid background. Oversized by 12px so the blur's soft
+   edge falls outside the box clip; background-position compensates so the
+   lines still land on the stage's 20px lattice. Counter-rotated by the front
+   label's angle (the real stage doesn't rotate), pivoting on the same pin. */
+.label-ghost-grid {
+  position: absolute;
+  inset: -12px;
+  background-color: #fff;
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(123, 123, 123, 0.5) 0,
+      rgba(123, 123, 123, 0.5) 0.5px,
+      transparent 0.5px,
+      transparent var(--label-grid-size, 20px)
+    ),
+    linear-gradient(
+      to right,
+      rgba(123, 123, 123, 0.5) 0,
+      rgba(123, 123, 123, 0.5) 0.5px,
+      transparent 0.5px,
+      transparent var(--label-grid-size, 20px)
+    );
+  background-size: var(--label-grid-size, 20px) var(--label-grid-size, 20px);
+  background-position: 12px 12px;
+  transform-origin: calc(var(--pin-x) + 12px) 12px;
+  will-change: transform;
+}
+
+/* Ghost stills of the back sheets: same geometry as .label-back-panel /
+   .label-back-layer (the box and the back stack share the stage's top-left
+   corner and pin), rotated by (sheet angle − front angle) each frame. */
+.label-ghost-media {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(var(--back-width, 350px), calc(50vw + 120px - 20px));
+  height: auto;
+  transform-origin: var(--pin-x) top;
+  will-change: transform;
+}
+
+/* Fractal noise, pre-rasterized to a tiling PNG (scripts/gen-grain.mjs).
+   Grain used to vanish whenever the panel started swinging: the old
+   backdrop-filter glass was toggled during rotation, which rebuilt the
+   backdrop root, re-rasterized the `.label-box` subtree and blanked this
+   pseudo while its PNG re-decoded. The glass no longer uses backdrop-filter
+   (see .label-glass above) and translateZ(0) keeps this on its own compositor
+   layer regardless — it paints once and stays put through swings, peeks and
+   project open/close. It sits above the glass (z 0) and below the front
+   text (z 2). */
+.label-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-color: transparent;
+  background-image: url('./grain.png');
+  background-repeat: repeat;
+  background-size: var(--label-grain-size) var(--label-grain-size);
+  opacity: var(--label-grain-opacity);
+  transform: translateZ(0);
+}
+
+.label-front {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 0;
+  padding: 15px;
+  overflow: hidden;
+}
+
+.label-front-top {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  font-weight: 350;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+}
+
+.label-front-bottom {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font-size: 32px;
+  line-height: 1;
+  font-stretch: var(--font-title-stretch);
+  text-transform: uppercase;
+}
+
+.label-front-bottom span {
+  display: block;
+}
