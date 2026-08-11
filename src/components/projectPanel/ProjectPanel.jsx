@@ -181,6 +181,10 @@ const InfoBlock = styled.div`
   font-style: italic;
   font-optical-sizing: auto;
 
+  a {
+    color: var(--link-color);
+  }
+
   p + p {
     margin-top: 1.25em;
   }

@@ -24,6 +24,8 @@ const GlobalStyle = createGlobalStyle`
     --font-display: "GT Canon", serif;
     --font-mono: "JetBrains Mono", monospace;
     --font-title-stretch: 70%;
+    --text-color: #131313;
+    --link-color: rgb(171, 171, 171);
   }
 
   * {
@@ -63,6 +65,12 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: 'Inter', sans-serif;
+  }
+
+  a,
+  a:link,
+  a:visited {
+    color: var(--link-color);
   }
 
   img {
