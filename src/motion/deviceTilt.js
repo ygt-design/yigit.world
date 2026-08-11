@@ -16,9 +16,23 @@ export function subscribeTilt(fn) {
   return () => listeners.delete(fn);
 }
 
-const NOTIFY_EPS = 0.01;
+// Wake threshold. Raw phone sensors jitter by a degree or more even when the
+// device is perfectly still; at the old 0.01 rad (~0.6°) that noise cleared
+// the bar on almost every event and kept every label's physics loop awake
+// (never sleeping = constant transform writes under the blur = the mobile
+// lag). ~1.7° ignores the noise floor while still waking on any real tilt.
+const NOTIFY_EPS = 0.03;
 let notifiedAngle = 0;
 let notifiedMag = 1;
+
+// Exponential smoothing of the raw in-plane gravity vector. Kills the
+// high-frequency sensor noise before it reaches the labels, so a still phone
+// produces a steady gravity direction (loops settle and sleep) while a real
+// tilt still moves the value within a couple of frames. Seeded to straight
+// down so the very first events don't yank the labels.
+const SMOOTH = 0.25;
+let smoothX = 0;
+let smoothY = 1;
 
 const BLEND_LOW = 0.25;
 const BLEND_HIGH = 0.55;
@@ -52,6 +66,12 @@ function onOrientation(e) {
     gy = -gx * sin + gy * cos;
     gx = x;
   }
+
+  // Low-pass the vector before it drives anything (see SMOOTH above).
+  smoothX += (gx - smoothX) * SMOOTH;
+  smoothY += (gy - smoothY) * SMOOTH;
+  gx = smoothX;
+  gy = smoothY;
 
   // Confidence in the measured direction, from its in-plane strength.
   const m = Math.min(Math.hypot(gx, gy), 1);

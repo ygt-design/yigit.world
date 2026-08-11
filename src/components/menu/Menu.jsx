@@ -1,15 +1,7 @@
-import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Grid, GridCell, GridSpan4, GRID } from '../../grid/index.js'
-import {
-  getGroupChannels,
-  fetchAllChannelContents,
-  tagsFromContents,
-} from '../../arena/index.js'
 import ManifestoArticle from '../manifesto/ManifestoArticle.jsx'
 import CopyEmail from './CopyEmail.jsx'
-
-const CHANNEL_PREFIX = '‡'
 
 const MenuLayer = styled.nav`
   position: fixed;
@@ -22,10 +14,7 @@ const MenuLayer = styled.nav`
   @media ${GRID.MEDIA_TABLET} {
     overflow-y: auto;
   }
-
-  /* On mobile the About content is surfaced at the top of the project grid
-     (see MobileAbout) rather than as a swipe-revealed background layer, so the
-     background menu is not used here. */
+  
   @media ${GRID.MEDIA_MOBILE} {
     display: none;
   }
@@ -207,58 +196,14 @@ const ManifestoFrame = styled.div`
   }
 `
 
-function useAllTags() {
-  const [tags, setTags] = useState([])
-
-  useEffect(() => {
-    let cancelled = false
-
-    ;(async () => {
-      try {
-        const channels = await getGroupChannels()
-        const flagged = channels.filter((ch) =>
-          (ch.title ?? '').startsWith(CHANNEL_PREFIX),
-        )
-        const lists = await Promise.all(
-          flagged.map((ch) =>
-            fetchAllChannelContents(ch.slug)
-              .then(tagsFromContents)
-              .catch(() => []),
-          ),
-        )
-        if (cancelled) return
-
-        const seen = new Set()
-        const unique = []
-        lists.flat().forEach((tag) => {
-          const key = tag.toLowerCase()
-          if (!seen.has(key)) {
-            seen.add(key)
-            unique.push(tag)
-          }
-        })
-        setTags(unique)
-      } catch {
-        if (!cancelled) setTags([])
-      }
-    })()
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  return tags
-}
-
 export default function Menu({
+  tags = [],
   selectedTags = [],
   onToggleTag,
   onClearTags,
   onReadManifesto,
 }) {
-  const tags = useAllTags()
- const hasFilter = selectedTags.length > 0
+  const hasFilter = selectedTags.length > 0
   const isSelected = (tag) =>
     selectedTags.some((t) => t.toLowerCase() === tag.toLowerCase())
 

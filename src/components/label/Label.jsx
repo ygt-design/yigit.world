@@ -39,6 +39,26 @@ const VIDEO_RE = /\.(mp4|webm|ogv|ogg|mov|m4v)(\?.*)?$/i
 const isVideoSrc = (src, type) =>
   type === 'video' || (typeof src === 'string' && VIDEO_RE.test(src))
 
+// One shared observer puts labels scrolled out of view fully to sleep: their
+// physics rAF stops, their back videos pause, and — because a paused video
+// produces no frames — the ghost-canvas copy loop idles too. The 25% margin
+// keeps just-offscreen labels live so scrolling back reveals them exactly as
+// they were, with no restart flash.
+const visibilityCallbacks =
+  typeof WeakMap === 'undefined' ? null : new WeakMap()
+const visibilityObserver =
+  typeof IntersectionObserver === 'undefined' || !visibilityCallbacks
+    ? null
+    : new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const cb = visibilityCallbacks.get(entry.target)
+            if (cb) cb(entry.isIntersecting)
+          })
+        },
+        { rootMargin: '25%' },
+      )
+
 // Attach a node to both our local ref and the caller's ref (object or fn).
 const assignRef = (ref, node) => {
   if (typeof ref === 'function') ref(node)
@@ -164,6 +184,7 @@ function syncVideoGhost(video, canvas) {
   const ctx = canvas.getContext('2d')
   let stopped = false
   let handle = 0
+  let scheduled = false
   let frameDrawn = false
   const useRvfc = typeof video.requestVideoFrameCallback === 'function'
 
@@ -191,6 +212,7 @@ function syncVideoGhost(video, canvas) {
   }
 
   const draw = () => {
+    scheduled = false
     if (stopped) return
     if (
       video.readyState >= 2 &&
@@ -199,20 +221,33 @@ function syncVideoGhost(video, canvas) {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
       frameDrawn = true
     }
+    // Don't spin the rAF fallback while the video is paused (offscreen label
+    // or tab hidden) — it produces no new frames, so copying the same frame
+    // forever is pure waste. The 'play' listener re-arms it. The rVFC path
+    // self-idles instead: its pending callback simply never fires until the
+    // next real frame, so we keep one registered and let it resume for free.
+    if (!useRvfc && video.paused) return
     schedule()
   }
 
   const schedule = () => {
-    if (stopped) return
+    if (stopped || scheduled) return
+    scheduled = true
     handle = useRvfc
       ? video.requestVideoFrameCallback(draw)
       : requestAnimationFrame(draw)
   }
 
+  const onPlay = () => {
+    if (!useRvfc) schedule()
+  }
+  video.addEventListener('play', onPlay)
+
   schedule()
 
   return () => {
     stopped = true
+    video.removeEventListener('play', onPlay)
     if (useRvfc) video.cancelVideoFrameCallback?.(handle)
     else cancelAnimationFrame(handle)
   }
@@ -279,6 +314,12 @@ function Label({
   const ghostGridRef = useRef(null)
   const ghostBackRef = useRef(null)
   const ghostLayerRefs = useRef([])
+
+  // Offscreen labels stop simulating entirely (see visibilityObserver). The
+  // physics effect publishes its restart fn on resumeRef so the observer can
+  // wake it again; visibleRef gates the loop and pointer handler in between.
+  const visibleRef = useRef(true)
+  const resumeRef = useRef(null)
 
   // The hanging back sheet is height:auto and absolutely positioned, so it
   // doesn't contribute to layout height. Measure its resting footprint from
@@ -376,6 +417,8 @@ function Label({
     // under gravity only and can't be pushed by the mouse.
     const cursor = { x: 0, y: 0, active: false }
     const onPointerMove = (e) => {
+      // Scrolled out of view: no simulation, so ignore the pointer entirely.
+      if (!visibleRef.current) return
       // Frozen (e.g. project panel open): ignore the cursor so the grid behind
       // doesn't react to a pointer that's interacting with the panel on top.
       if (!standalone && cursorRef?.current?.enabled === false) return
@@ -389,6 +432,12 @@ function Label({
     }
 
     const tick = (now) => {
+      // Went offscreen mid-swing: freeze in place (state is kept) until the
+      // visibility observer resumes us.
+      if (!visibleRef.current) {
+        raf = 0
+        return
+      }
       const dt = Math.min((now - last) / 1000, 0.05)
       last = now
 
@@ -543,10 +592,13 @@ function Label({
     }
 
     const startLoop = () => {
-      if (raf) return
+      // Don't wake a loop for an offscreen label (swing/tilt subscribers and
+      // the pointer handler all funnel through here).
+      if (raf || !visibleRef.current) return
       last = performance.now()
       raf = requestAnimationFrame(tick)
     }
+    resumeRef.current = startLoop
 
     const unsubscribeSwing = standalone ? null : subscribeSwing(startLoop)
 
@@ -558,11 +610,41 @@ function Label({
     return () => {
       cancelAnimationFrame(raf)
       raf = 0
+      resumeRef.current = null
       unsubscribeSwing?.()
       unsubscribeTilt()
       window.removeEventListener('pointermove', onPointerMove)
     }
   }, [stackKey, frontOnly, standalone, ignoreCursor, startAtRest, panelSwing, cursorRef, subscribeSwing])
+
+  // Pause everything for a label scrolled out of view and resume it on return.
+  // Pausing the back videos also idles their ghost-canvas copy loops (a paused
+  // video yields no frames), and the physics loop self-stops via visibleRef.
+  useEffect(() => {
+    const wrapper = wrapperRef.current
+    if (!wrapper || !visibilityObserver) return
+
+    const onVisibility = (isVisible) => {
+      if (isVisible === visibleRef.current) return
+      visibleRef.current = isVisible
+      const videos = [backRef.current, ...layerRefs.current].filter(
+        (node) => node?.tagName === 'VIDEO',
+      )
+      if (isVisible) {
+        videos.forEach((v) => v.play?.().catch(() => {}))
+        resumeRef.current?.()
+      } else {
+        videos.forEach((v) => v.pause?.())
+      }
+    }
+
+    visibilityCallbacks.set(wrapper, onVisibility)
+    visibilityObserver.observe(wrapper)
+    return () => {
+      visibilityObserver.unobserve(wrapper)
+      visibilityCallbacks.delete(wrapper)
+    }
+  }, [stackKey, frontOnly])
 
   return (
     <div

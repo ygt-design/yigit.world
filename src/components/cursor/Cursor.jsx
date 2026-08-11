@@ -12,9 +12,12 @@ const POINTER_MARKUP = pointerSvg
   .replace(/\sclass="cls-1"/, '')
   .replace(/<svg\b/, '<svg class="cursor-pointer"')
 
-// Below this perceived luminance (0–1) the background counts as "dark" and the
-// cursor flips to white so it stays visible.
 const DARK_THRESHOLD = 0.5
+
+const HAS_HOVER =
+  typeof window === 'undefined' ||
+  !window.matchMedia ||
+  window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
 function isPointerTarget(el) {
   if (!el) return false
@@ -194,7 +197,7 @@ function Cursor() {
 
   useEffect(() => {
     const el = ringRef.current
-    if (!el) return
+    if (!el || !HAS_HOVER) return
 
     // The wrapper is positioned at the raw pointer coordinate; the SVG child
     // offsets itself so its drawn tip lands exactly on that point.

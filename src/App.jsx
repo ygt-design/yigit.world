@@ -53,6 +53,25 @@ const initialProjectSlug = new URLSearchParams(window.location.search).get(
   "project",
 );
 
+// Dedupe the tag universe across all loaded projects, case-insensitively with
+// the first spelling winning. Derived once here from the label data so the
+// About menu and mobile About share it — the menu no longer refetches every
+// channel just to rebuild this list.
+const dedupeTags = (items = []) => {
+  const seen = new Set();
+  const out = [];
+  items.forEach((item) =>
+    (item.tags ?? []).forEach((tag) => {
+      const key = tag.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        out.push(tag);
+      }
+    }),
+  );
+  return out;
+};
+
 function Scene() {
   const { setOpen, setPeek, setCursorEnabled } = useSwing();
   const isMobile = useIsMobile();
@@ -87,6 +106,10 @@ function Scene() {
   }, []);
   const clearTags = useCallback(() => setSelectedTags([]), []);
 
+  // The full tag list, lifted from the label data (see dedupeTags) so both the
+  // desktop menu and the mobile About render it without a second fetch.
+  const [allTags, setAllTags] = useState([]);
+
   // Boot sequence: the loading screen covers everything while ArenaLabels
   // fetches. When the data settles (ready or error) it swings off the corner
   // pin to reveal the content, then unmounts.
@@ -97,6 +120,7 @@ function Scene() {
   const restoredRef = useRef(false);
   const handleReady = useCallback((items) => {
     setContentReady(true);
+    if (items) setAllTags(dedupeTags(items));
     if (restoredRef.current) return;
     restoredRef.current = true;
     if (!initialProjectSlug || !items) return;
@@ -178,6 +202,7 @@ function Scene() {
     <>
       <GlobalStyle />
       <Menu
+        tags={allTags}
         selectedTags={selectedTags}
         onToggleTag={toggleTag}
         onClearTags={clearTags}
@@ -187,6 +212,7 @@ function Scene() {
         <ArenaLabels
           onReady={handleReady}
           onSelect={openProject}
+          allTags={allTags}
           selectedTags={selectedTags}
           onToggleTag={toggleTag}
           onClearTags={clearTags}

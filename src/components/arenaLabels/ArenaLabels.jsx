@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Grid, GridCell, GRID } from '../../grid/index.js'
 import Label from '../label/Label.jsx'
@@ -6,7 +6,6 @@ import MobileAbout from '../mobileAbout/MobileAbout.jsx'
 import {
   getGroupChannels,
   getLayoutChannelOrder,
-  findBlockByTitleInChannel,
   fetchAllChannelContents,
   useArenaRefresh,
   mediaSrc,
@@ -135,6 +134,7 @@ function LabelFront({ title, tags }) {
 export default function ArenaLabels({
   onSelect,
   onReady,
+  allTags = [],
   selectedTags = [],
   onToggleTag,
   onClearTags,
@@ -175,14 +175,18 @@ export default function ArenaLabels({
 
         const built = await Promise.all(
           flagged.map(async (ch) => {
-            const thumb = await findBlockByTitleInChannel(
-              ch.slug,
-              THUMBNAIL_TITLE,
-              { skipCache },
+            // One contents fetch per channel drives everything below: the
+            // thumbnail, the back stack, and the tags. (Previously the
+            // thumbnail came from a separate findBlockByTitleInChannel call
+            // that fetched the very same contents a second time.)
+            const contents = await fetchAllChannelContents(ch.slug, { skipCache })
+            const thumb = contents.find(
+              (it) =>
+                it.type !== 'Channel' &&
+                it.title?.toLowerCase() === THUMBNAIL_TITLE.toLowerCase(),
             )
 
             // First media block after the Thumbnail becomes the back stack.
-            const contents = await fetchAllChannelContents(ch.slug, { skipCache })
             const thumbIdx = contents.findIndex((it) => it.id === thumb?.id)
             const after = thumbIdx >= 0 ? contents.slice(thumbIdx + 1) : contents
             const stackBlock = after.find(
@@ -228,24 +232,9 @@ export default function ArenaLabels({
   }, [refreshKey])
 
   // A project matches the filter if it carries any of the selected tags
-  // (union). No selection means show everything.
-  // The full tag universe for the mobile About filter, deduped case-insensitively
-  // (first spelling wins) from the already-loaded projects.
-  const allTags = useMemo(() => {
-    const seen = new Set()
-    const out = []
-    items.forEach((item) =>
-      (item.tags ?? []).forEach((tag) => {
-        const key = tag.toLowerCase()
-        if (!seen.has(key)) {
-          seen.add(key)
-          out.push(tag)
-        }
-      }),
-    )
-    return out
-  }, [items])
-
+  // (union). No selection means show everything. The tag universe itself
+  // (allTags) is derived once in App from this same data and passed back down,
+  // so the mobile About and the desktop menu stay in sync with one source.
   const selectedLower = selectedTags.map((t) => t.toLowerCase())
   const visibleItems =
     selectedLower.length === 0

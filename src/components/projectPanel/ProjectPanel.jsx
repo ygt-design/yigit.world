@@ -202,6 +202,51 @@ function InfoText({ block }) {
 }
 
 // Reports its measured orientation up (via onOrientation); the parent packs
+// Panel videos only play while on screen. Metadata still preloads so the
+// orientation measurement (which drives column packing) resolves immediately
+// with no layout shift; the heavy video data buffers on first play, once the
+// clip scrolls near the viewport, and pauses again when it leaves. Poster
+// covers the gap so the frame never looks empty — visually identical to the
+// old always-playing version, minus the cost of every clip decoding at once.
+function PanelVideo({ src, poster, onMeasure }) {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (typeof IntersectionObserver === 'undefined') {
+      el.play?.().catch(() => {})
+      return
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) el.play?.().catch(() => {})
+          else el.pause?.()
+        })
+      },
+      { rootMargin: '25%' },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  return (
+    <video
+      ref={ref}
+      src={src}
+      poster={poster ?? undefined}
+      loop
+      muted
+      playsInline
+      preload="metadata"
+      onLoadedMetadata={(e) =>
+        onMeasure?.(e.currentTarget.videoWidth, e.currentTarget.videoHeight)
+      }
+    />
+  )
+}
+
 // the columns and hands back the span to render at.
 function MediaBlock({ block, src: srcProp, poster, span = 1, onOrientation }) {
   const src = srcProp ?? mediaSrc(block)
@@ -214,18 +259,7 @@ function MediaBlock({ block, src: srcProp, poster, span = 1, onOrientation }) {
   if (isVideoSrc(src)) {
     return (
       <Media $span={span}>
-        <video
-          src={src}
-          poster={poster ?? undefined}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          onLoadedMetadata={(e) =>
-            measure(e.currentTarget.videoWidth, e.currentTarget.videoHeight)
-          }
-        />
+        <PanelVideo src={src} poster={poster} onMeasure={measure} />
       </Media>
     )
   }
