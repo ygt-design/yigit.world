@@ -25,7 +25,7 @@ const GlobalStyle = createGlobalStyle`
     --font-mono: "JetBrains Mono", monospace;
     --font-title-stretch: 70%;
     --text-color: #131313;
-    --link-color: rgb(171, 171, 171);
+    --link-color: rgb(171, 171, 171); /* project detail body links only */
   }
 
   * {
@@ -70,7 +70,7 @@ const GlobalStyle = createGlobalStyle`
   a,
   a:link,
   a:visited {
-    color: var(--link-color);
+    color: #000;
   }
 
   img {

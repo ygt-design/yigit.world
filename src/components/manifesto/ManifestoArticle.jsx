@@ -69,7 +69,7 @@ export const Article = styled.article`
   }
 
   a {
-    color: var(--link-color);
+    color: inherit;
     text-decoration: underline;
   }
 `
