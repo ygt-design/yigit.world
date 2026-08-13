@@ -5,8 +5,6 @@ import './Cursor.css'
 const POINTER_SELECTOR =
   'a, button, [role="button"], [data-cursor="pointer"], input, select, textarea, label, summary, [href], [tabindex]:not([tabindex="-1"])'
 
-// Inline the SVG so fills and strokes render faithfully. Strip the embedded
-// stylesheet (hardcoded black) so CSS currentColor can drive hover color.
 const POINTER_MARKUP = pointerSvg
   .replace(/<defs>[\s\S]*?<\/defs>\s*/, '')
   .replace(/\sclass="cls-1"/, '')
@@ -25,7 +23,6 @@ function isPointerTarget(el) {
   return Boolean(target && !target.classList.contains('cursor-ring'))
 }
 
-// Perceived luminance (0–1) from 0–255 sRGB channels.
 function luminance(r, g, b) {
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255
 }
@@ -36,12 +33,10 @@ function parseColor(value) {
   if (!match) return null
   const parts = match[1].split(',').map((p) => parseFloat(p.trim()))
   const [r, g, b, a = 1] = parts
-  if (a === 0) return null // fully transparent → keep looking up the tree
+  if (a === 0) return null 
   return { r, g, b }
 }
 
-// Walk up the DOM until we hit an element with a non-transparent background
-// color. Returns its luminance, or null if nothing opaque is found.
 function backgroundLuminance(el) {
   let node = el
   while (node && node !== document.documentElement) {
@@ -53,8 +48,6 @@ function backgroundLuminance(el) {
   return bodyColor ? luminance(bodyColor.r, bodyColor.g, bodyColor.b) : null
 }
 
-// Cache one small offscreen canvas per <img> so we don't redraw on every move.
-// Sampling canvases are downscaled — we only need coarse luminance, not detail.
 const SAMPLE_MAX = 96
 const imageCanvases = new WeakMap()
 

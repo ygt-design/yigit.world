@@ -63,7 +63,6 @@ function GridOverlay() {
 
   useEffect(() => {
     const handleKeyPress = (e) => {
-      // Ignore key repeats so holding G doesn't flicker the overlay
       if ((e.key === 'g' || e.key === 'G') && !e.repeat) {
         setIsVisible(prev => !prev)
       }

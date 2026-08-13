@@ -35,7 +35,10 @@ export function tagsFromBlock(block) {
 
 export function tagsFromContents(contents) {
   const tagBlock = contents.find(isTagBlock)
-  return tagBlock ? tagsFromBlock(tagBlock) : []
+  const tags = tagBlock ? tagsFromBlock(tagBlock) : []
+  // Alphabetical (case-insensitive) so tags read top-to-bottom in the same
+  // order everywhere they're rendered: the label cards and the project panel.
+  return tags.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
 }
 
 export function blockText(block) {

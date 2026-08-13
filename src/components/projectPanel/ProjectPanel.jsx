@@ -128,6 +128,8 @@ const Media = styled.div`
     display: block;
     width: 100%;
     height: auto;
+    /* Same hairline as the label cards (.label-box / .label-stage). */
+    border: 0.5px solid rgba(123, 123, 123, 0.5);
   }
 
   @media ${GRID.MEDIA_MOBILE} {
@@ -205,13 +207,6 @@ function InfoText({ block }) {
   )
 }
 
-// Reports its measured orientation up (via onOrientation); the parent packs
-// Panel videos only play while on screen. Metadata still preloads so the
-// orientation measurement (which drives column packing) resolves immediately
-// with no layout shift; the heavy video data buffers on first play, once the
-// clip scrolls near the viewport, and pauses again when it leaves. Poster
-// covers the gap so the frame never looks empty — visually identical to the
-// old always-playing version, minus the cost of every clip decoding at once.
 function PanelVideo({ src, poster, onMeasure }) {
   const ref = useRef(null)
 

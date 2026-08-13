@@ -56,11 +56,7 @@ export const GRID = {
    * Use in styled-components: @media ${GRID.MEDIA_MOBILE} { … }
    */
   MEDIA_MOBILE: `(max-width: ${BREAKPOINT})`,
-  /**
-   * Tablet: an explicit range above mobile and up to the tablet bound, so it
-   * never overlaps MEDIA_MOBILE and doesn't depend on CSS source order.
-   * Use in styled-components: @media ${GRID.MEDIA_TABLET} { … }
-   */
+
   MEDIA_TABLET: `(min-width: ${BREAKPOINT}) and (max-width: ${BREAKPOINT_TABLET})`,
 };
 
