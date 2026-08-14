@@ -1,6 +1,3 @@
-/* Only hide the native cursor and show the custom ring on devices with a
-   real hovering pointer (mouse/trackpad). On touch/coarse-pointer devices the
-   ring would sit stuck at the last tap, so leave the native cursor alone. */
 @media (hover: hover) and (pointer: fine) {
   *,
   *::before,
@@ -25,7 +22,6 @@
   will-change: transform;
 }
 
-/* Tip sits at ~(30.39, 0) in the 58.23×86.44 viewBox → ~52.2% / 0%. */
 .cursor-pointer {
   display: block;
   width: 38px;
@@ -53,7 +49,6 @@
   color: rgb(171, 171, 171);
 }
 
-/* Over a dark background the default black cursor disappears, so flip white. */
 .cursor-ring.is-on-dark {
   --cursor-color: #fff;
 }

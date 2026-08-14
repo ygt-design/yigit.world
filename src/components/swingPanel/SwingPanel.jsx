@@ -16,7 +16,6 @@ const Panel = styled.div`
   will-change: transform;
   backface-visibility: hidden;
 
-  /* Desktop: 12 columns, band starts at column 5 (one wider than detail's 6). */
   --grid-w: min(${GRID.MAX_WIDTH}, 100vw);
   --grid-margin: calc((100vw - var(--grid-w)) / 2);
   --col: calc((var(--grid-w) - ${GRID.PADDING} * 2 - ${GRID.GAP} * 11) / 12);
@@ -26,14 +25,12 @@ const Panel = styled.div`
   width: calc(100vw - var(--band-left));
 
   @media ${GRID.MEDIA_TABLET} {
-    /* 8 columns, band starts at column 3 (one wider than detail's 4). */
     --col: calc((100vw - ${GRID.PADDING_TABLET} * 2 - ${GRID.GAP_TABLET} * 7) / 8);
     --band-left: calc(${GRID.PADDING_TABLET} + var(--col) * 2 + ${GRID.GAP_TABLET} * 2);
     width: calc(100vw - var(--band-left));
   }
 
   @media ${GRID.MEDIA_MOBILE} {
-    /* Full width on mobile — no room to reveal a background column. */
     width: 100vw;
   }
 `
@@ -52,9 +49,6 @@ const Scroller = styled.div`
     pointer-events: auto;
   }
 
-  /* On mobile the panel is full-width and the menu strip doesn't exist, so
-     there's no gap to click through — and iOS won't touch-scroll a container
-     that isn't itself hit-testable. Restore normal pointer events there. */
   @media ${GRID.MEDIA_MOBILE} {
     pointer-events: auto;
   }

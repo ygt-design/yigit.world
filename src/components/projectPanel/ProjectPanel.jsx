@@ -13,9 +13,6 @@ import {
   isVideoSrc,
 } from '../../arena/index.js'
 
-// Same spring the label SwingPanel uses (see SwingProvider): the panel hinges
-// on the top-right pin and swings between flat (0, covering the grid) and open
-// (OPEN_ANGLE, swung off to reveal the grid), fading out near the open end.
 const OPEN_ANGLE = -137 * (Math.PI / 180)
 const STIFFNESS = 19
 const SPRING_DAMP = 4.8
@@ -28,9 +25,6 @@ const panelOpacity = (angle) => {
   return 1 - Math.min(Math.max(t, 0), 1)
 }
 
-// Fixed panel matching the label grid panel's width/position exactly, so it
-// lands directly on top of it. Same band math and pin as SwingPanel; the
-// transform/opacity are driven imperatively by the spring loop below.
 const Panel = styled.div`
   position: fixed;
   top: 0;
@@ -62,8 +56,6 @@ const Panel = styled.div`
   }
 `
 
-// Two-column structure: the text (tags + info) stacks in the left column; the
-// right column is left open (for media later). Collapses to one column on mobile.
 const Layout = styled.div`
   height: 100%;
   overflow-y: auto;
@@ -85,7 +77,6 @@ const Layout = styled.div`
   }
 `
 
-// Right column: tags stacked at the top, info below with a generous gap.
 const ContentColumn = styled.div`
   grid-column: 2;
   min-width: 0;
@@ -93,9 +84,6 @@ const ContentColumn = styled.div`
   flex-direction: column;
   gap: 3.5rem;
 
-  /* On the smaller breakpoints the layout is a single column, so the tags
-     stack directly under the title with no grid row-gap. Add breathing room
-     above the tags block so it isn't flush against the title. */
   @media ${GRID.MEDIA_TABLET} {
     gap: 2.5rem;
     margin-top: 2.5rem;
@@ -128,7 +116,6 @@ const Media = styled.div`
     display: block;
     width: 100%;
     height: auto;
-    /* Same hairline as the label cards (.label-box / .label-stage). */
     border: 0.5px solid rgba(123, 123, 123, 0.5);
   }
 
@@ -137,8 +124,6 @@ const Media = styled.div`
   }
 `
 
-// Matches the card title (.label-front-bottom): GT Canon display, condensed.
-// Cards render at scale(0.8), so the on-screen size is 32px * 0.8.
 const CARD_SCALE = 0.8
 
 const ProjectTitle = styled.h1`
@@ -154,7 +139,6 @@ const ProjectTitle = styled.h1`
   color: #000;
 `
 
-// Stacked one per line, like the card's .label-front-top list.
 const TagList = styled.ul`
   list-style: none;
   margin: 0;
@@ -172,10 +156,8 @@ const TagList = styled.ul`
   }
 `
 
-// GT Canon (variable display face) rendered italic, sized to match the tags.
 const InfoBlock = styled.div`
   font-family: var(--font-display);
-  /* font-style: italic; */
   color: #131313;
   font-size: calc(0.95rem * ${CARD_SCALE});
   line-height: 1.45;
@@ -246,7 +228,6 @@ function PanelVideo({ src, poster, onMeasure }) {
   )
 }
 
-// the columns and hands back the span to render at.
 function MediaBlock({ block, src: srcProp, poster, span = 1, onOrientation }) {
   const src = srcProp ?? mediaSrc(block)
   if (!src) return null
@@ -270,8 +251,6 @@ function MediaBlock({ block, src: srcProp, poster, span = 1, onOrientation }) {
         alt={block?.title ?? ''}
         loading="lazy"
         decoding="async"
-        // Cached images can be complete before onLoad binds, so also measure
-        // via the ref when the node mounts already loaded.
         ref={(el) => {
           if (el?.complete && el.naturalWidth) {
             measure(el.naturalWidth, el.naturalHeight)
@@ -284,13 +263,8 @@ function MediaBlock({ block, src: srcProp, poster, span = 1, onOrientation }) {
 }
 
 export default function ProjectPanel({ project, closing = false, onClosed }) {
-  // Track which project the loaded data belongs to so a stale fetch never
-  // paints under a newly selected project — the panel shows just the title
-  // until the matching contents resolve.
   const [loaded, setLoaded] = useState({ slug: null, blocks: [], status: 'loading' })
 
-  // Measured orientation per media block id ('landscape' | 'portrait'), used to
-  // pack the two columns. Guarded so a repeat report is a no-op (no re-render).
   const [orientations, setOrientations] = useState({})
   const handleOrientation = useCallback((id, isLandscape) => {
     setOrientations((prev) => {
@@ -307,8 +281,6 @@ export default function ProjectPanel({ project, closing = false, onClosed }) {
     onClosedRef.current = onClosed
   })
 
-  // Paint the off-position before the first frame so it swings in from there
-  // (rather than flashing flat for a frame).
   useLayoutEffect(() => {
     const el = panelRef.current
     if (!el) return
@@ -316,9 +288,6 @@ export default function ProjectPanel({ project, closing = false, onClosed }) {
     el.style.opacity = String(panelOpacity(springRef.current.angle))
   }, [])
 
-  // Spring toward flat (0) on open, toward OPEN_ANGLE on close — identical
-  // constants to the SwingPanel. Continues from the current angle/velocity so
-  // reversing mid-swing is smooth. Unmounts (onClosed) once settled closed.
   useEffect(() => {
     const target = closing ? OPEN_ANGLE : 0
     let last = performance.now()
@@ -400,7 +369,6 @@ export default function ProjectPanel({ project, closing = false, onClosed }) {
   const thumbnailSrc = mediaSrc(thumbnailBlock) ?? project?.image
   const mediaBlocks = mediaBlocksFromContents(blocks)
 
-  // Ordered media list (thumbnail first, then the rest).
   const mediaItems = []
   if (thumbnailSrc) {
     mediaItems.push({
@@ -414,21 +382,52 @@ export default function ProjectPanel({ project, closing = false, onClosed }) {
     mediaItems.push({ id: block.id, block, src: undefined, poster: posterSrc(block) })
   })
 
-  // Pack the two columns in order: a landscape image at the start of a row
-  // spans both columns; otherwise the image takes one column. Whenever a row
-  // has an open second slot, the next image fills it as a single column —
-  // even if it's landscape — so it sits beside the preceding one.
-  let pendingSecondSlot = false
-  const spans = mediaItems.map((item) => {
-    if (pendingSecondSlot) {
-      pendingSecondSlot = false
-      return 1
+  // A block whose Are.na title contains "*" is forced to the start of a fresh
+  // row and paired with the next block as a two-column row. If reaching it
+  // would leave a dangling half-row, the item that opened that row is widened
+  // to full width so the starred pair always begins on a clean row.
+  const isStarred = (item) => Boolean(item.block?.title?.includes('*'))
+
+  const spans = new Array(mediaItems.length).fill(1)
+  let slotOpen = false // a second column is waiting to be filled
+  let slotFromStar = false // the open slot belongs to a starred pair
+  let openerIndex = -1 // index of the item that opened the current row
+
+  mediaItems.forEach((item, i) => {
+    const starred = isStarred(item)
+
+    if (slotOpen) {
+      // A starred block must start its own row, so unless this open slot was
+      // created by a star expecting this block as its partner, close the row
+      // by widening its opener and let the starred block begin a new row.
+      if (starred && !slotFromStar) {
+        spans[openerIndex] = 2
+        slotOpen = false
+      } else {
+        spans[i] = 1
+        slotOpen = false
+        slotFromStar = false
+        return
+      }
     }
+
+    if (starred) {
+      spans[i] = 1
+      slotOpen = true
+      slotFromStar = true
+      openerIndex = i
+      return
+    }
+
     if (orientations[item.id] === 'landscape') {
-      return 2
+      spans[i] = 2
+      return
     }
-    pendingSecondSlot = true
-    return 1
+
+    spans[i] = 1
+    slotOpen = true
+    slotFromStar = false
+    openerIndex = i
   })
 
   return (

@@ -39,8 +39,6 @@ const Bio = styled.div`
   }
 `
 
-// Two-column tags block under the bio: muted "Tags" label left, list right.
-// Spans the full width of the bio column.
 const TagsSection = styled.div`
   margin-top: 4rem;
   width: 100%;
@@ -78,9 +76,6 @@ const TagList = styled.ul`
   }
 `
 
-// Each tag is a toggle. Selected tags are underlined; once any tag is picked
-// the rest dim so the active filter reads at a glance. The whole set clicks
-// back off by toggling the same tag again.
 const TagButton = styled.button`
   display: inline;
   background: none;
@@ -111,8 +106,6 @@ const ManifestoLink = styled.a`
   }
 `
 
-// Same two-column layout as TagsSection: a single dimmed "Contact" label on
-// the left, the list of links on the right. Sits just below the tags block.
 const ContactCard = styled.div`
   margin-top: 4rem;
   width: 100%;
@@ -156,10 +149,7 @@ const ContactList = styled.ul`
   }
 `
 
-// Fixed resting tilt so the manifesto reads on a subtle angle. Desktop only —
-// on tablet/mobile the frame is full-width inline reading, where a rotation
-// would clip text at the edges.
-const MANIFESTO_TILT = -5 // deg, resting angle (pivots from the top-right corner)
+const MANIFESTO_TILT = -5
 
 const ManifestoFrame = styled.div`
   background: #fff;

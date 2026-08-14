@@ -62,9 +62,6 @@ const cellObserver =
         })
       })
 
-// Sets --label-scale synchronously on mount (ResizeObserver's initial callback
-// is async — a first paint at the wrong scale would flash), then keeps it in
-// sync with the cell's width. React 19 ref cleanup detaches the observer.
 const observeCell = (node) => {
   if (!node) return undefined
   node.style.setProperty('--label-scale', labelScale(node.clientWidth))
@@ -72,10 +69,6 @@ const observeCell = (node) => {
   return () => cellObserver?.unobserve(node)
 }
 
-// Height is the label's measured footprint (px, reported by Label via
-// onFootprint) multiplied by the same scale applied to the stage. Every cell
-// is sized to exactly its own content, so the constant row-gap renders as
-// equal spacing between labels regardless of their differing heights.
 const LabelCell = styled.div`
   display: flex;
   justify-content: center;
@@ -103,8 +96,6 @@ const StatusText = styled.p`
   color: #131313;
 `
 
-// Full-width row that carries the mobile About block above the labels. Removed
-// from the grid entirely on larger screens so it never adds an empty row/gap.
 const MobileAboutCell = styled(GridCell)`
   display: none;
 
@@ -145,8 +136,6 @@ export default function ArenaLabels({
   const [status, setStatus] = useState('loading')
   const [footprints, setFootprints] = useState({})
 
-  // Ref so the fetch effect doesn't rebind (and refetch) when the parent
-  // passes a new callback identity.
   const onReadyRef = useRef(onReady)
   useEffect(() => {
     onReadyRef.current = onReady
@@ -160,8 +149,6 @@ export default function ArenaLabels({
       try {
         const [channels, layoutOrder] = await Promise.all([
           getGroupChannels(undefined, { skipCache }),
-          // A missing/broken Layout channel shouldn't take the grid down —
-          // fall back to the group's own channel order.
           getLayoutChannelOrder({ skipCache }).catch(() => []),
         ])
         const orderIndex = new Map(layoutOrder.map((id, i) => [id, i]))
@@ -175,10 +162,6 @@ export default function ArenaLabels({
 
         const built = await Promise.all(
           flagged.map(async (ch) => {
-            // One contents fetch per channel drives everything below: the
-            // thumbnail, the back stack, and the tags. (Previously the
-            // thumbnail came from a separate findBlockByTitleInChannel call
-            // that fetched the very same contents a second time.)
             const contents = await fetchAllChannelContents(ch.slug, { skipCache })
             const thumb = contents.find(
               (it) =>
@@ -186,15 +169,11 @@ export default function ArenaLabels({
                 it.title?.toLowerCase() === THUMBNAIL_TITLE.toLowerCase(),
             )
 
-            // First media block after the Thumbnail becomes the back stack.
             const thumbIdx = contents.findIndex((it) => it.id === thumb?.id)
             const after = thumbIdx >= 0 ? contents.slice(thumbIdx + 1) : contents
             const stackBlock = after.find(
               (it) => it.type !== 'Channel' && mediaSrc(it),
             )
-            // Labels render at ≤350px wide, so the medium (1200px) rendition
-            // is plenty — originals are routinely multi-MB. Posters let video
-            // labels paint immediately while the video loads lazily.
             const stackSrc = mediaSrc(stackBlock, { size: 'medium' })
 
             return {
@@ -219,8 +198,6 @@ export default function ArenaLabels({
       } catch {
         if (!cancelled) {
           setStatus('error')
-          // Errors also count as "done" — reveal the error state rather than
-          // leaving the loader up forever.
           onReadyRef.current?.()
         }
       }
@@ -231,10 +208,6 @@ export default function ArenaLabels({
     }
   }, [refreshKey])
 
-  // A project matches the filter if it carries any of the selected tags
-  // (union). No selection means show everything. The tag universe itself
-  // (allTags) is derived once in App from this same data and passed back down,
-  // so the mobile About and the desktop menu stay in sync with one source.
   const selectedLower = selectedTags.map((t) => t.toLowerCase())
   const visibleItems =
     selectedLower.length === 0

@@ -2,23 +2,18 @@ import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Label from '../label/Label.jsx'
 
-// Same spring + pivot as SwingProvider so the loader's exit reads as the same
-// physical system as the label panel (pin under the corner mark, mild
-// overshoot, fade over the last 12% of travel).
 const OPEN_ANGLE = -137 * (Math.PI / 180)
 const STIFFNESS = 19
 const SPRING_DAMP = 4.8
 const SETTLE = 0.001
 const FADE_START = 0.88
 
-// Keep the loader up briefly even when data arrives instantly (warm cache) —
-// a sub-100ms white flash reads as a glitch, not a loading screen.
 const MIN_SHOW_MS = 900
 
 const Layer = styled.div`
   position: fixed;
   inset: 0;
-  z-index: 1200; /* above CornerMark (1000); Cursor (9999) stays on top */
+  z-index: 1200;
   background: #fff;
   display: flex;
   align-items: center;
@@ -26,10 +21,6 @@ const Layer = styled.div`
   transform-origin: calc(100% - 20px) 20px;
   will-change: transform;
 
-  /* Same size as the grid labels: their scale formula min(0.8, 100cqw/420px)
-     caps at 0.8 on any viewport wider than ~420px, so 0.8 matches. Scale from
-     center so it stays centered. Label's cursor-collision math reads the
-     stage scale from its rect, so physics stays correct. */
   .label-stage {
     transform: scale(0.8);
     transform-origin: center;
@@ -42,7 +33,6 @@ export default function LoadingScreen({ done, onGone }) {
   const mountedAtRef = useRef(0)
   const onGoneRef = useRef(onGone)
 
-  // Declared before the exit effect so the mount time is stamped first.
   useEffect(() => {
     if (!mountedAtRef.current) mountedAtRef.current = performance.now()
   }, [])
@@ -61,7 +51,6 @@ export default function LoadingScreen({ done, onGone }) {
     let last = 0
 
     const start = () => {
-      // Content behind is ready — let it take clicks while we swing away.
       el.style.pointerEvents = 'none'
       last = performance.now()
       raf = requestAnimationFrame(tick)

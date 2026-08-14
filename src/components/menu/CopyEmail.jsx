@@ -45,9 +45,6 @@ export default function CopyEmail() {
   const tooltipRef = useRef(null)
   const timeoutRef = useRef(null)
 
-  // Position imperatively with a compositor-only transform: no React re-render
-  // and no layout/paint work per mousemove, so the rest of the page never
-  // re-rasterizes while the tooltip tracks the cursor.
   const moveTooltip = e => {
     const el = tooltipRef.current
     if (!el) return
@@ -63,7 +60,6 @@ export default function CopyEmail() {
       clearTimeout(timeoutRef.current)
       timeoutRef.current = setTimeout(() => setCopied(false), 2000)
     } catch {
-      // Clipboard API unavailable — leave tooltip unchanged.
     }
   }
 

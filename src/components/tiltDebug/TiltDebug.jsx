@@ -2,10 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { deviceTilt } from '../../motion/deviceTilt.js'
 
-// Temporary diagnostic overlay, shown when the URL contains `?tilt`.
-// Listens to raw `deviceorientation` itself (independent of the physics
-// pipeline) so we can compare what the device reports against what the
-// labels are being told.
 const Box = styled.div`
   position: fixed;
   top: 60px;

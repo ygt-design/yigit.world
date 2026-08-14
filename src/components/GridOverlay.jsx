@@ -54,7 +54,6 @@ function GridOverlay() {
   const isMobile = useMediaQuery(GRID.MEDIA_MOBILE)
   const isTablet = useMediaQuery(GRID.MEDIA_TABLET)
 
-  // Render the correct number of columns for the active breakpoint
   const columnCount = isMobile
     ? GRID.COLUMNS_MOBILE
     : isTablet

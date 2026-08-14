@@ -2,8 +2,6 @@ import { useEffect } from 'react'
 import styled from 'styled-components'
 import ManifestoArticle from './ManifestoArticle.jsx'
 
-// Dimmed layer behind the sheet. Sits below the corner mark (z 1000) so the
-// close X stays tappable, and clicking it (the strip above the sheet) closes.
 const Backdrop = styled.div`
   position: fixed;
   inset: 0;
@@ -14,8 +12,6 @@ const Backdrop = styled.div`
   transition: opacity 0.35s ease, visibility 0.35s ease;
 `
 
-// The manifesto reads in a sheet that slides up from the bottom, leaving a
-// short strip of backdrop at the top to tap off. Scrolls internally.
 const Sheet = styled.div`
   position: fixed;
   left: 0;

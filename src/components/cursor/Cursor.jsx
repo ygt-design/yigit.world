@@ -60,16 +60,10 @@ function buildSampleCanvas(source, natW, natH) {
   canvas.height = h
   const ctx = canvas.getContext('2d', { willReadFrequently: true })
   ctx.drawImage(source, 0, 0, w, h)
-  // Reading a pixel throws on cross-origin images without CORS ("tainted"
-  // canvas) — probe once here so callers know this canvas is unusable.
   ctx.getImageData(0, 0, 1, 1)
   return { ctx, w, h }
 }
 
-// Returns a ready-to-sample entry, or null while unavailable. Cross-origin
-// images (e.g. the Are.na CDN) taint the canvas, so on failure we reload the
-// same URL with crossOrigin="anonymous" in the background and sample that
-// copy once it arrives (it comes from the browser cache in most cases).
 function getImageCanvas(img) {
   const src = img.currentSrc || img.src
   let entry = imageCanvases.get(img)
@@ -83,7 +77,6 @@ function getImageCanvas(img) {
     Object.assign(entry, sample, { ready: true })
     return entry
   } catch {
-    // Tainted — fall through to the CORS reload below.
   }
 
   const clone = new Image()
@@ -93,15 +86,12 @@ function getImageCanvas(img) {
       const sample = buildSampleCanvas(clone, clone.naturalWidth, clone.naturalHeight)
       Object.assign(entry, sample, { ready: true })
     } catch {
-      // Server doesn't allow CORS reads; leave entry unusable.
     }
   }
   clone.src = src
   return null
 }
 
-// Map a client point over an <img> to its natural pixel, honoring object-fit
-// and object-position, then read that pixel's luminance.
 function imageLuminance(img, clientX, clientY) {
   if (!img.naturalWidth || !img.naturalHeight) return null
   if (!img.complete) return null
@@ -116,7 +106,6 @@ function imageLuminance(img, clientX, clientY) {
   const style = getComputedStyle(img)
   const fit = style.objectFit || 'fill'
 
-  // Determine drawn size of the image inside its box.
   let drawW = boxW
   let drawH = boxH
   const boxRatio = boxW / boxH
@@ -143,7 +132,6 @@ function imageLuminance(img, clientX, clientY) {
     drawH = natH
   }
 
-  // object-position offsets (default center).
   const [posX = '50%', posY = '50%'] = style.objectPosition.split(' ')
   const resolvePos = (pos, box, draw) => {
     if (pos.endsWith('%')) return ((box - draw) * parseFloat(pos)) / 100
@@ -152,7 +140,6 @@ function imageLuminance(img, clientX, clientY) {
   const offsetX = resolvePos(posX, boxW, drawW)
   const offsetY = resolvePos(posY, boxH, drawH)
 
-  // Point relative to the drawn image, then scaled to natural pixels.
   const localX = clientX - rect.left - offsetX
   const localY = clientY - rect.top - offsetY
   if (localX < 0 || localY < 0 || localX > drawW || localY > drawH) return null
@@ -167,17 +154,13 @@ function imageLuminance(img, clientX, clientY) {
   return luminance(r, g, b)
 }
 
-// Best-effort luminance of whatever is under the cursor. Walks the whole
-// element stack at the point (not just the topmost element) so images that
-// sit beneath transparent wrappers/overlays are still sampled. Takes a
-// precomputed stack so the caller can reuse it for the pointer-target test.
 function luminanceFromStack(stack, clientX, clientY) {
   for (const el of stack) {
     if (el.classList.contains('cursor-ring')) continue
     if (el.tagName === 'IMG') {
       const lum = imageLuminance(el, clientX, clientY)
       if (lum != null) return lum
-      continue // image not sampleable yet — keep looking below it
+      continue
     }
     const color = parseColor(getComputedStyle(el).backgroundColor)
     if (color) return luminance(color.r, color.g, color.b)
@@ -192,14 +175,8 @@ function Cursor() {
     const el = ringRef.current
     if (!el || !HAS_HOVER) return
 
-    // The wrapper is positioned at the raw pointer coordinate; the SVG child
-    // offsets itself so its drawn tip lands exactly on that point.
     el.style.transform = `translate(${window.innerWidth / 2}px, ${window.innerHeight / 2}px)`
 
-    // Keep the ring glued to the pointer every event (cheap), but coalesce the
-    // expensive hit-test + luminance sampling to at most once per frame so fast
-    // mice (120–240Hz) don't spam getComputedStyle/getImageData or thrash layout
-    // against the label physics loops. Class toggles at 60fps look identical.
     let px = 0
     let py = 0
     let rafId = 0
@@ -211,8 +188,6 @@ function Cursor() {
       if (px === lastX && py === lastY) return
       lastX = px
       lastY = py
-      // One hit-test serves both the pointer-target check (topmost = stack[0],
-      // same as elementFromPoint) and the luminance walk.
       const stack = document.elementsFromPoint(px, py)
       el.classList.toggle('is-pointer', isPointerTarget(stack[0]))
       const lum = luminanceFromStack(stack, px, py)

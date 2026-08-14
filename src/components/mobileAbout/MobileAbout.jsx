@@ -2,9 +2,6 @@ import styled from 'styled-components'
 import { GRID } from '../../grid/index.js'
 import CopyEmail from '../menu/CopyEmail.jsx'
 
-// Mobile-only: the About content (bio, contact, tags) surfaced at the top of
-// the project grid. Hidden at every larger size, where the swing-revealed
-// background menu carries this instead.
 const Wrap = styled.div`
   display: none;
 
@@ -40,8 +37,6 @@ const ManifestoLink = styled.a`
   }
 `
 
-// Shared two-column label/list block used for both Contact and Tags: a dimmed
-// label on the left, the list of items on the right.
 const Section = styled.div`
   margin-top: 3rem;
   width: 100%;
@@ -96,13 +91,9 @@ const TagButton = styled.button`
   text-decoration: ${(p) => (p.$active ? 'underline' : 'none')};
   opacity: ${(p) => (p.$dimmed ? 0.35 : 1)};
   transition: opacity 0.15s ease;
-  /* Skip the 300ms tap delay and, crucially, iOS Safari's "first tap only
-     hovers" behavior that otherwise swallows the tag's first tap. */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 
-  /* Only apply hover feedback where a real pointer can hover — on touch the
-     :hover rule sticks after tap and makes the filter feel unresponsive. */
   @media (hover: hover) {
     &:hover {
       text-decoration: underline;

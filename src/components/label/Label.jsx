@@ -14,7 +14,7 @@ const MAX_OMEGA = 25
 const LABEL_W = 280
 const LABEL_H = 410
 const CURSOR_RADIUS = 20
-const PIN_X = LABEL_W / 2 // top center of front label; drives --pin-x
+const PIN_X = LABEL_W / 2
 
 const BACK_MASS = 5
 const BACK_COUPLING = 12
@@ -25,11 +25,6 @@ const STACK_COUPLING = BACK_COUPLING
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
 
-// Touch devices have no hover: the "cursor" the labels would react to is a
-// scrolling finger, and every swipe through the (full-width) label column
-// whacked the labels at collision speed — flipping them over their pins and
-// piling the sheets onto their neighbors. There the labels swing from
-// gravity/device tilt only; the pointer is ignored entirely.
 const HAS_HOVER =
   typeof window === 'undefined' ||
   !window.matchMedia ||
@@ -39,11 +34,6 @@ const VIDEO_RE = /\.(mp4|webm|ogv|ogg|mov|m4v)(\?.*)?$/i
 const isVideoSrc = (src, type) =>
   type === 'video' || (typeof src === 'string' && VIDEO_RE.test(src))
 
-// One shared observer puts labels scrolled out of view fully to sleep: their
-// physics rAF stops, their back videos pause, and — because a paused video
-// produces no frames — the ghost-canvas copy loop idles too. The 25% margin
-// keeps just-offscreen labels live so scrolling back reveals them exactly as
-// they were, with no restart flash.
 const visibilityCallbacks =
   typeof WeakMap === 'undefined' ? null : new WeakMap()
 const visibilityObserver =
@@ -59,19 +49,13 @@ const visibilityObserver =
         { rootMargin: '25%' },
       )
 
-// Attach a node to both our local ref and the caller's ref (object or fn).
 const assignRef = (ref, node) => {
   if (typeof ref === 'function') ref(node)
   else if (ref) ref.current = node
 }
 
-// Are.na attachments are raw uploads (5–30MB each); loading every label's
-// video at mount was the main cause of slow page loads. Show the poster
-// still immediately and only attach the video src once the label is near
-// the viewport.
 function LazyVideo({ src, poster, className, refProp, style, onMeasure }) {
   const elRef = useRef(null)
-  // No IntersectionObserver (ancient browser) → just load eagerly.
   const [load, setLoad] = useState(
     () => typeof IntersectionObserver === 'undefined',
   )
@@ -90,7 +74,6 @@ function LazyVideo({ src, poster, className, refProp, style, onMeasure }) {
     return () => io.disconnect()
   }, [load])
 
-  // autoplay set before src is attached doesn't always kick in — nudge it.
   useEffect(() => {
     if (load) elRef.current?.play?.().catch(() => {})
   }, [load])
@@ -142,9 +125,6 @@ function BackMedia({ src, type, poster, className, refProp, style, onMeasure }) 
   )
 }
 
-// Ghost copy of a back sheet shown inside the glass blur. Images are plain
-// <img> duplicates; videos become a <canvas> that mirrors the real (already
-// decoding) video element frame-by-frame — see syncVideoGhost.
 function GhostMedia({ src, type, refProp, style }) {
   if (!src) return null
   if (isVideoSrc(src, type)) {
@@ -171,15 +151,8 @@ function GhostMedia({ src, type, refProp, style }) {
   )
 }
 
-// The ghost canvas renders at reduced resolution — the glass blurs it at 6px
-// anyway, so extra pixels are wasted copy bandwidth.
 const GHOST_MAX_W = 360
 
-// Mirror a live <video> onto its ghost canvas. Frames are copied with
-// drawImage (the video is decoded once, by the real element) using
-// requestVideoFrameCallback, so copies happen only when the video actually
-// produces a new frame; rAF is the fallback. Until the lazy video attaches
-// its src and starts producing frames, the poster still fills the ghost.
 function syncVideoGhost(video, canvas) {
   const ctx = canvas.getContext('2d')
   let stopped = false
@@ -221,11 +194,6 @@ function syncVideoGhost(video, canvas) {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
       frameDrawn = true
     }
-    // Don't spin the rAF fallback while the video is paused (offscreen label
-    // or tab hidden) — it produces no new frames, so copying the same frame
-    // forever is pure waste. The 'play' listener re-arms it. The rVFC path
-    // self-idles instead: its pending callback simply never fires until the
-    // next real frame, so we keep one registered and let it resume for free.
     if (!useRvfc && video.paused) return
     schedule()
   }
@@ -258,23 +226,12 @@ const randomSigned = (min, max) => {
   return Math.random() < 0.5 ? -mag : mag
 }
 
-// Prevents looping over the top: 
-// 1/2 * ω² ≤ g(1 + cos θ) 
-// (This makes so much sense, but ai helped me with it, 
-// it is a circular motion equation for a pendulum)
-// The budget must use the label's *actual* gravity: computing it from the
-// full GRAVITY constant while the label ran weaker gravity (gJitter and the
-// device-tilt magnitude scale it down) under-braked and let hard knocks loop
-// labels clean over the pin.
 const TOP_MARGIN_FRAC = 0.04
 const maxVel = (a, g) => {
   const budget = g * (1 + Math.cos(a)) - g * TOP_MARGIN_FRAC
   return budget > 0 ? Math.sqrt(2 * budget) : 0
 }
 
-// Cap speed only while moving toward the top (world angle ±π). This prevents
-// looping over the pin without braking motion that is falling back toward
-// rest — a symmetric clamp would freeze a label knocked near inverted.
 const capTowardTop = (vel, worldAngle, g) => {
   const phi = Math.atan2(Math.sin(worldAngle), Math.cos(worldAngle))
   if (vel * phi <= 0) return vel
@@ -282,8 +239,6 @@ const capTowardTop = (vel, worldAngle, g) => {
   return clamp(vel, -cap, cap)
 }
 
-// Below this speed/displacement every body counts as at rest and the rAF
-// loop sleeps; it restarts on pointer movement or a new panel swing.
 const SLEEP_EPS = 0.002
 
 const displaced = (theta) => Math.abs(Math.sin(theta / 2))
@@ -307,25 +262,13 @@ function Label({
   const layerRefs = useRef([])
   const footprintRef = useRef(LABEL_H)
 
-  // Ghost copies of everything behind the glass (stage grid + back sheets),
-  // blurred with a regular CSS filter instead of backdrop-filter. The physics
-  // loop counter-rotates them so they always align with the real elements;
-  // see the .label-glass comment in Label.css for why.
   const ghostGridRef = useRef(null)
   const ghostBackRef = useRef(null)
   const ghostLayerRefs = useRef([])
 
-  // Offscreen labels stop simulating entirely (see visibilityObserver). The
-  // physics effect publishes its restart fn on resumeRef so the observer can
-  // wake it again; visibleRef gates the loop and pointer handler in between.
   const visibleRef = useRef(true)
   const resumeRef = useRef(null)
 
-  // The hanging back sheet is height:auto and absolutely positioned, so it
-  // doesn't contribute to layout height. Measure its resting footprint from
-  // the loaded media (natural ratio × the element's unrotated computed width)
-  // and report max(LABEL_H, tallest sheet) so the parent can reserve exact,
-  // equal spacing for variable-height labels.
   const measureEl = (el) => {
     if (!onFootprint || !el) return
     const natW = el.naturalWidth || el.videoWidth || 0
@@ -342,21 +285,15 @@ function Label({
 
   const { swingRef: panelSwing, cursorRef, subscribeSwing } = useSwing()
 
-  // Identity of the stack contents (not just its length) so the physics
-  // effect rebinds when layers are replaced and never drives detached nodes.
   const stackKey = backStack
     .map((layer) => (typeof layer === 'string' ? layer : layer?.src ?? ''))
     .join('|')
 
-  // Cached media can finish loading before React attaches the load handlers,
-  // so the load event never fires. Sweep already-complete elements on mount.
   useEffect(() => {
     if (!onFootprint || frontOnly) return
     ;[backRef.current, ...layerRefs.current].forEach((el) => measureEl(el))
   })
 
-  // Pair every real <video> back sheet with its ghost <canvas> and keep the
-  // canvas mirroring the video's frames, so the glass blur shows live motion.
   useEffect(() => {
     if (frontOnly) return
     const pairs = []
@@ -383,9 +320,6 @@ function Label({
 
     let angle = startAtRest ? 0 : randomSigned(START_ANGLE_MIN, START_ANGLE_MAX)
     let velocity = startAtRest ? 0 : randomSigned(0, START_VEL_MAX)
-    // Per-label jitter on pendulum frequency and damping so labels don't all
-    // swing in lockstep. The over-the-top caps (maxVel) are fed the label's
-    // actual jittered gravity so they stay valid for any gJitter.
     const gJitter = 0.7 + Math.random() * 0.3
     const damping = DAMPING * (0.85 + Math.random() * 0.3)
     let backAngle = angle
@@ -396,8 +330,6 @@ function Label({
     const ghostGrid = ghostGridRef.current
     const ghostBack = ghostBackRef.current
 
-    // Keep ghosts index-aligned with their real layers (a video layer without
-    // a poster has no ghost, so a plain filter would misalign the arrays).
     const layers = []
     const layerGhosts = []
     layerRefs.current.forEach((node, i) => {
@@ -412,15 +344,9 @@ function Label({
     let prevCursorY = 0
     let hasPrevCursor = false
 
-    // ignoreCursor labels never listen for the pointer, so cursor.active stays
-    // false and the collision branch below is never entered — the label swings
-    // under gravity only and can't be pushed by the mouse.
     const cursor = { x: 0, y: 0, active: false }
     const onPointerMove = (e) => {
-      // Scrolled out of view: no simulation, so ignore the pointer entirely.
       if (!visibleRef.current) return
-      // Frozen (e.g. project panel open): ignore the cursor so the grid behind
-      // doesn't react to a pointer that's interacting with the panel on top.
       if (!standalone && cursorRef?.current?.enabled === false) return
       cursor.x = e.clientX
       cursor.y = e.clientY
@@ -432,8 +358,6 @@ function Label({
     }
 
     const tick = (now) => {
-      // Went offscreen mid-swing: freeze in place (state is kept) until the
-      // visibility observer resumes us.
       if (!visibleRef.current) {
         raf = 0
         return
@@ -441,14 +365,9 @@ function Label({
       const dt = Math.min((now - last) / 1000, 0.05)
       last = now
 
-      // Labels inside the swing panel couple to its rotation; standalone labels
-      // (e.g. on the project detail back layer) use local physics only.
       const Th = standalone ? 0 : panelSwing.current.angle
       const moving = standalone ? false : panelSwing.current.moving
 
-      // Total frame offset = panel swing + physical device tilt (gyroscope).
-      // Tilting the phone rotates gravity in the screen plane; lying flat
-      // shrinks its in-plane magnitude toward zero so labels float.
       const frame = Th + deviceTilt.angle
       const g = GRAVITY * deviceTilt.mag * gJitter
 
@@ -457,18 +376,11 @@ function Label({
       velocity = capTowardTop(velocity, angle + frame, g)
       let next = angle + velocity * dt
 
-      // Cursor collision when standalone, or when the panel is closed and at
-      // rest (getBoundingClientRect assumes an un-rotated frame). Grid labels
-      // also require the cursor to be enabled (frozen while a panel is open).
       const cursorEnabled = cursorRef?.current?.enabled !== false
       if (
         cursor.active &&
         (standalone || (cursorEnabled && !moving && Math.abs(Th) < 0.05))
       ) {
-        // The stage may be CSS-scaled by its grid cell (transform-origin is
-        // the pin, which the stage rect tracks). Work in unscaled label space:
-        // measure the scale from the stage rect and divide screen-space
-        // cursor values by it. cursorOmega is scale-invariant.
         const stageRect = el.parentElement.getBoundingClientRect()
         const scale = stageRect.width / LABEL_W || 1
         const pivotX = stageRect.left + PIN_X * scale
@@ -494,7 +406,6 @@ function Label({
           const localY = -sin * dx + cos * dy
           const nearestX = clamp(localX, -PIN_X, LABEL_W - PIN_X)
           const nearestY = clamp(localY, 0, LABEL_H)
-          // Cursor ring is screen-sized; convert its radius into label space.
           return Math.hypot(localX - nearestX, localY - nearestY) - CURSOR_RADIUS / scale
         }
 
@@ -533,8 +444,6 @@ function Label({
 
       angle = next
       el.style.transform = `rotate(${angle}rad)`
-      // The stage grid is fixed, so its ghost counter-rotates by the front
-      // angle; sheet ghosts rotate by their angle relative to the front.
       if (ghostGrid) ghostGrid.style.transform = `rotate(${-angle}rad)`
 
       if (!frontOnly && backEl) {
@@ -562,11 +471,6 @@ function Label({
         }
       }
 
-      // Sleep once every body is at rest and the panel isn't swinging; the
-      // loop restarts on pointer movement, a new panel swing, or a device
-      // tilt change. Displacement (sin(θ/2), see `displaced`) is measured
-      // from the stable hanging-down equilibrium only, so a label balanced
-      // upside-down keeps simulating until gravity rights it.
       const mag = deviceTilt.mag
       let atRest =
         (standalone || !moving) &&
@@ -592,8 +496,6 @@ function Label({
     }
 
     const startLoop = () => {
-      // Don't wake a loop for an offscreen label (swing/tilt subscribers and
-      // the pointer handler all funnel through here).
       if (raf || !visibleRef.current) return
       last = performance.now()
       raf = requestAnimationFrame(tick)
@@ -617,9 +519,6 @@ function Label({
     }
   }, [stackKey, frontOnly, standalone, ignoreCursor, startAtRest, panelSwing, cursorRef, subscribeSwing])
 
-  // Pause everything for a label scrolled out of view and resume it on return.
-  // Pausing the back videos also idles their ghost-canvas copy loops (a paused
-  // video yields no frames), and the physics loop self-stops via visibleRef.
   useEffect(() => {
     const wrapper = wrapperRef.current
     if (!wrapper || !visibilityObserver) return

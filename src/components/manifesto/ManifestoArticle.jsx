@@ -1,8 +1,6 @@
 import styled from 'styled-components'
 import { GRID } from '../../grid/index.js'
 
-// The manifesto body + typography, shared between the desktop About menu
-// (rendered in a right-bleeding frame) and the mobile manifesto panel.
 export const Article = styled.article`
   padding: 9.5rem;
   hyphens: auto;

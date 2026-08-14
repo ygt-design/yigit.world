@@ -5,7 +5,6 @@ import {
   requestTiltPermission,
 } from '../../motion/deviceTilt.js'
 
-// Swings in around its pin like the labels: drop with overshoot, settle.
 const swingIn = keyframes`
   0% {
     transform: translateX(-50%) rotate(10deg);
@@ -39,7 +38,7 @@ const Card = styled.div`
   border: 0.5px solid rgba(123, 123, 123, 0.5);
   box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
   color: #000;
-  transform-origin: 50% 0; /* the pin */
+  transform-origin: 50% 0;
   transform: translateX(-50%);
   animation: ${swingIn} 1.1s cubic-bezier(0.23, 1, 0.32, 1) both;
   transition:
@@ -65,8 +64,6 @@ const Card = styled.div`
     `}
 `
 
-// Crossed hairlines marking the pin the card hangs from — same mark as the
-// label pins and the corner cross.
 const Pin = styled.span`
   position: absolute;
   top: 0;
@@ -151,15 +148,7 @@ const TextButton = styled.button`
 
 const LEAVE_MS = 450
 
-// Designed stand-in for the browser's motion-permission flow. iOS only shows
-// its native dialog when requestPermission is called from a tap, so this card
-// supplies that tap ("Allow motion") in the site's own voice. It asks on every
-// visit by design — once iOS has granted, the request resolves silently, so
-// re-asking only costs the returning visitor a single tap. Declining just
-// leaves the labels to gravity — there's no hover to lose on touch anyway.
 export default function MotionPrompt({ show }) {
-  // Whether the platform gates motion behind a permission call never changes
-  // within a page load, so sample it once.
   const [needsPermission] = useState(() => tiltNeedsPermission())
   const [dismissed, setDismissed] = useState(false)
   const [leaving, setLeaving] = useState(false)
