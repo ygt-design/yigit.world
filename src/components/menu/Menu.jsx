@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Grid, GridCell, GridSpan4, GRID } from '../../grid/index.js'
 import ManifestoArticle from '../manifesto/ManifestoArticle.jsx'
 import CopyEmail from './CopyEmail.jsx'
+import resumeUrl from '../../assets/YigitToprak_Resume_2026.pdf'
 
 const MenuLayer = styled.nav`
   position: fixed;
@@ -203,18 +204,20 @@ export default function Menu({
         <GridSpan4 $start={1} $startMobile={1} $spanMobile={4}>
           <Bio>
             <p>
-              Yİğİt (yee-eet) Toprak is a graphic designer and programmer based in
-              Toronto. His work explores graphic systems built through reimagined
-              tools, interfaces, and processes.
+              <span lang="tr">Yiğit</span> Toprak (yee-eet) is a graphic designer and programmer based
+              in Toronto. His work explores graphic systems built through
+              reimagined tools, interfaces, and processes.
             </p>
             <p>
-              His practice spans digital and physical design, hands on making, type design, visual identity systems, creative direction, editorial design, and
-              custom tools, software and hardware.
+              His practice spans digital and physical design, hands-on making,
+              type design, visual identity, creative direction, editorial
+              design, custom software and hardware, performance, and design
+              pedagogy.
             </p>
             <p>
-              He has worked on projects for clients including Google, CIBC, the
-              University of Toronto, Projectory, York University, Evergreen, NXNE,
-              and SvN Architects.{' '}
+              He has worked with clients including Google, CIBC, the University
+              of Toronto, Projectory, York University, Evergreen, NXNE, and SvN
+              Architects.{' '}
               <ManifestoLink
                 href="#"
                 onClick={(e) => {
@@ -272,6 +275,11 @@ export default function Menu({
               </li>
               <li>
                 <a href="https://www.are.na/yigit-toprak-ceo0kj3p55g/index" target="_blank">are.na/yigit-toprak</a>
+              </li>
+              <li>
+                <a href={resumeUrl} download="YigitToprak_Resume_2026.pdf">
+                  Resume ↓
+                </a>
               </li>
             </ContactList>
           </ContactCard>

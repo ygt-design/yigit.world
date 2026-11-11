@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { GRID } from '../../grid/index.js'
 import {
   fetchAllChannelContents,
@@ -54,6 +54,16 @@ const Panel = styled.div`
   @media ${GRID.MEDIA_MOBILE} {
     width: 100vw;
   }
+
+  ${(p) =>
+    p.$fullWidth &&
+    css`
+      width: 100vw;
+
+      @media ${GRID.MEDIA_TABLET} {
+        width: 100vw;
+      }
+    `}
 `
 
 const Layout = styled.div`
@@ -75,6 +85,21 @@ const Layout = styled.div`
     grid-template-columns: 1fr;
     padding: 80px ${GRID.PADDING_MOBILE} ${GRID.ROW_GAP_MOBILE};
   }
+
+  ${(p) =>
+    p.$fullWidth &&
+    css`
+      width: calc(100vw - var(--band-left));
+      margin-inline: auto;
+
+      @media ${GRID.MEDIA_TABLET} {
+        width: calc(100vw - var(--band-left));
+      }
+
+      @media ${GRID.MEDIA_MOBILE} {
+        width: 100vw;
+      }
+    `}
 `
 
 const ContentColumn = styled.div`
@@ -262,7 +287,7 @@ function MediaBlock({ block, src: srcProp, poster, span = 1, onOrientation }) {
   )
 }
 
-export default function ProjectPanel({ project, closing = false, onClosed }) {
+export default function ProjectPanel({ project, closing = false, onClosed, fullWidth = false }) {
   const [loaded, setLoaded] = useState({ slug: null, blocks: [], status: 'loading' })
 
   const [orientations, setOrientations] = useState({})
@@ -431,8 +456,8 @@ export default function ProjectPanel({ project, closing = false, onClosed }) {
   })
 
   return (
-    <Panel ref={panelRef} aria-label={project?.title ?? 'Project'}>
-      <Layout>
+    <Panel ref={panelRef} aria-label={project?.title ?? 'Project'} $fullWidth={fullWidth}>
+      <Layout $fullWidth={fullWidth}>
         <ProjectTitle>{project?.title}</ProjectTitle>
 
         <ContentColumn>

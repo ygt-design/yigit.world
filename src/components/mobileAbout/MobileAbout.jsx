@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { GRID } from '../../grid/index.js'
 import CopyEmail from '../menu/CopyEmail.jsx'
+import resumeUrl from '../../assets/YigitToprak_Resume_2026.pdf'
 
 const Wrap = styled.div`
   display: none;
@@ -116,19 +117,19 @@ export default function MobileAbout({
     <Wrap>
       <Bio>
         <p>
-          Yİğİt (yee-eet) Toprak is a graphic designer and programmer based in
+          <span lang="tr">Yiğit</span> Toprak (yee-eet) is a graphic designer and programmer based in
           Toronto. His work explores graphic systems built through reimagined
           tools, interfaces, and processes.
         </p>
         <p>
-          His practice spans digital and print design, including UI/UX,
-          typography, brand development, creative direction, editorial work, and
-          custom tools.
+          His practice spans digital and physical design, hands-on making, type
+          design, visual identity, creative direction, editorial design, custom
+          software and hardware, performance, and design pedagogy.
         </p>
         <p>
-          He has worked on projects for clients including Google, CIBC, the
-          University of Toronto, Projectory, York University, Evergreen, NXNE,
-          and SvN Architects.{' '}
+          He has worked with clients including Google, CIBC, the University of
+          Toronto, Projectory, York University, Evergreen, NXNE, and SvN
+          Architects.{' '}
           <ManifestoLink
             href="#"
             onClick={(e) => {
@@ -159,6 +160,11 @@ export default function MobileAbout({
               rel="noreferrer"
             >
               are.na/yigit-toprak
+            </a>
+          </li>
+          <li>
+            <a href={resumeUrl} download="YigitToprak_Resume_2026.pdf">
+              Resume ↓
             </a>
           </li>
         </List>
